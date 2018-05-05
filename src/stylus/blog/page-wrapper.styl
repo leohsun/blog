@@ -1,0 +1,120 @@
+@import './elements'
+
+@keyframes rote
+  0
+    transform rotateZ(0)
+  25%
+    transform rotateZ(90deg)
+  50%
+    transform rotateZ(180deg)
+  72%
+    transform rotateZ(270deg)
+  100%
+    transform rotateZ(360deg)
+@keyframes withFlex
+  from
+    width 30px
+  to
+    width 2px
+@keyframes heightFlex
+  from
+    height 30px
+  to
+    height 2px
+.page-wrapper
+  position relative
+  margin 0 auto
+  width 100%
+  background-color #ffffff
+  margin-bottom 90px
+  padding 60px 0
+  span.top-arrow
+    position absolute
+    left 0
+    top -30px
+    width 100%
+    height 60px
+    display flex
+    .left-white, .right-white
+      flex 1
+      background white
+    .center-transprent
+      background white
+      width 1200px
+      transition all 0.2s ease-out
+    &::before
+      pseudo-class('block')
+      arrow('bottom', 600, 30, white)
+      border-top-width 0
+      position absolute
+      left 50%
+      margin-left -600px
+      top -30px
+      transition all 0.2s ease-out
+    &::after
+      pseudo-class('block')
+      arrow('top', 600, 0, transparent, white)
+      position absolute
+      left 50%
+      margin-left -600px
+      top 0
+      transition all 0.2s ease-out
+    &.animation
+      &::before
+        border-bottom-width 0
+        border-top-width 60px
+        transition all 0.1s ease-in
+      &::after
+        border-top-width 30px
+        transition all 0.1s 0.1s ease-in
+      .center-transprent
+        margin-top 30px
+        transition all 0.1s 0.1s ease-in
+  span.bottom-arrow
+    position absolute
+    left 0
+    bottom -60px
+    width 100%
+    height 60px
+    display flex
+    background transparent
+    .left-white, .right-white
+      flex 1
+      background white
+      transition all 0.2s ease-out
+    .center-transprent
+      background white
+      width 1200px
+      transition margin 0.2s 0.2s ease-out
+    &::before
+      pseudo-class('block')
+      arrow('top', 600, 30px, white, white)
+      border-bottom-width 0
+      position absolute
+      left 50%
+      margin-left -600px
+      top 30px
+      transition border-width 0.2s 0.2s ease-out
+    &::after
+      pseudo-class('block')
+      arrow('top', 600, 30, white)
+      border-bottom-width 0
+      position absolute
+      left 50%
+      margin-left -600px
+      top 60px
+      transition all 0.2s ease-out
+    &.animation
+      &::before
+        border-color white
+        border-bottom-width 30px
+        border-bottom-color transparent
+        border-top-width 0
+        transition border-width 0.2s 0.2s ease-in
+      &::after
+        border-top-width 0
+        transition border-width 0.2s ease-in
+      .center-transprent
+        margin-bottom 30px
+        transition all 0.2s 0.2s ease-in
+  

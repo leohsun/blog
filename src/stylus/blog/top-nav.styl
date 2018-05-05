@@ -1,0 +1,244 @@
+@import './elements'
+.top-nav
+	height 300px
+	padding-top 50px
+	align-items center
+	.serch-btn
+		width 100px
+		float left
+		text-align center
+		margin-left 120px
+		font-size 35px
+		line-height 60px
+		color #4e96b3
+		transition all 200ms ease-in-out
+		cursor pointer
+		&:hover
+			color darken(#4e96b3,10%)
+			transform rotateZ(10deg)
+	.searchBox
+		position fixed
+		z-index 999
+		left 0
+		right 0
+		top 0
+		bottom 0
+		display none
+		padding-top 50px
+		background-color rgba(0, 0, 0, 0.4)
+		.inputBox
+			position relative
+			margin 0 auto
+			width 600px
+			height 60px
+			input
+				width inherit
+				height inherit
+				line-height 60px
+				font-size 25px
+				text-align center
+				color #ffffff
+				background-color rgba(255, 255, 255, 0.6)
+				border none
+				border-radius 30px
+				padding 0 2em
+				box-sizing border-box
+				&::-webkit-input-placeholder
+					color #ffffff
+					font-weight normal
+			h3
+				position absolute
+				right -100px
+				top 50%
+				font-size 36px
+				transform translateY(-50%)
+		.result-list
+			margin 0 auto
+			width 600px
+			line-height 60px
+			font-size 18px
+			
+			text-align center
+			background-color rgba(255, 255, 255, 0.95)
+			border none
+			border-radius 30px
+			padding 0 2em
+			box-sizing border-box
+			a
+				display inline-block
+				width 100%
+				color rgba(2,0,0,.6)
+	.right-menu
+		float right
+		width 60px
+		height 40px
+		line-height 40px
+		margin-right 120px
+		position relative
+		.btn
+			position absolute
+			top 50%
+			transform translateY(-50%)
+			cursor pointer
+			width 36px
+			height 36px
+			display flex
+			flex-direction column
+			justify-content space-around
+			.line
+				transition all 0.3s ease-in-out
+				height 4px
+				border-radius 2px
+			.line1
+				background #c97676
+			.line2
+				background #9dc852
+			.line3
+				background #4e96b3
+			&.show
+				.line1
+					transform rotateZ(45deg) translate3d(8px, 9px, 0)
+				.line2
+					opacity 0
+				.line3
+					transform rotateZ(-45deg) translate3d(8px, -9px, 0)
+		.menu
+			position absolute
+			width 500px
+			right -200px
+			opacity 0
+			transition all 0.3s ease-in
+			.category
+				display inline-block
+				width 100px
+				height 40px
+				text-align center
+				color #ffffff
+				position relative
+				cursor pointer
+				h2
+					position absolute
+					z-index 1
+					width 100%
+					color #ffffff
+					a
+						display inline-block
+						width 100%
+						height 100%
+						color #ffffff
+					&::before
+						position absolute
+						left 0
+						top 100%
+						pseudo-class('block')
+						arrow('top',50,5,red,transparent)
+						border-bottom-width 0
+						transition border-width 0.2s 0.2s ease-out
+					&::after
+						position absolute
+						left 0
+						bottom 0
+						pseudo-class('blue')
+						arrow('bottom',50,0,#ebebeb)
+						border-bottom-width 0
+						transition all 0.2s ease-out
+				.dropDown
+					position absolute
+					left 0
+					top 40px
+					width 100px
+					background #dddddd
+					padding 5px 0
+					color #1e1e1e
+					transition all 0.2s ease-in
+					li
+						height 0
+						overflow hidden
+						transition height 0.4s ease-out
+						a
+							display block
+							line-height 30px
+							font-size 16px
+							text-align center
+							color rgba(2,0,0,.6)
+							&:hover
+								background rgba(0, 0, 0, 0.1)
+					&::after
+						position absolute
+						left 0
+						bottom -5px
+						pseudo-class('block')
+						arrow('top',50,5,#dddddd)
+						border-bottom-width 0
+						transition all 0.2s ease-in
+				&:hover
+					h2
+						&::before
+							border-top-width 0
+							transition border-width 0.1s ease-in
+						&::after
+							border-bottom-width 5px
+							transition border-width 0.1s 0.1s ease-in
+					.dropDown
+						background #ebebeb
+						li
+							height 30px
+							transition height 0.2s cubic-bezier(.36,.85,.75,1.15)
+						&::after
+							border-top-color #ebebeb
+					
+			li:nth-of-type(1)
+				h2
+					background-color 	#9dc852
+					&::before
+						border-top-color #9dc852
+			li:nth-of-type(2)
+				h2
+					background-color 	#4e96b3
+					&::before
+						border-top-color #4e96b3
+					
+			li:nth-of-type(3)
+				h2
+					background-color 	#c97676
+					&::before
+						border-top-color #c97676
+			li:nth-of-type(4)
+				h2
+					background-color 	#dbab58
+					&::before
+						border-top-color #dbab58
+			li:nth-of-type(5)
+				h2
+					background-color 	#8a8b8e
+					&::before
+						border-top-color #8a8b8e		
+		&.show
+			.menu
+				right 60px
+				opacity 1
+			
+			
+				
+			
+			
+	.logo
+		margin 0 auto
+		width 600px
+		height 100px
+		.logo-box
+			width 100px
+			height 100px
+			margin 0 auto
+			border-radius 50px
+			overflow hidden
+			img 
+				width 100%
+				transition all 0.2s ease-in
+			&:hover
+				img 
+					transform scale(1.3)
+		h2
+			color #ffffff
+			text-align center
+			padding 20px 0

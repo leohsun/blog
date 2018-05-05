@@ -1,0 +1,167 @@
+
+arrow(direction = top, width = 200, arrowWidth = 20, arrowColor = red, borderColor = transparent)
+  border unit(width, 'px') solid borderColor
+  border-{direction}-width unit(arrowWidth, 'px')
+  border-{direction}-color arrowColor
+  if (direction == top)
+    border-bottom-width unit(arrowWidth, 'px')
+  if (direction == bottom)
+    border-top-width unit(arrowWidth, 'px')
+  if (direction == left)
+    border-right-width unit(arrowWidth, 'px')
+  if (direction == right)
+    border-left-width unit(arrowWidth, 'px')
+pseudo-class(type = block)
+  content ''
+  if (type == block)
+    width 0
+    height 0
+    display block
+  if (type == inline)
+    font-size 0
+    line-height 0
+.content-list-layout
+  position relative
+  min-height 160px
+  background-size contain
+  border-radius 6px
+  &::after
+    pseudo-class()
+    position absolute
+    left 0
+    top 0
+    width 100%
+    height 100%
+    border-radius 6px
+    overflow hidden
+    box-shadow 0 0px 3px rgba(0, 1px, 0, 0.6), 0 0 10px rgba(255, 255, 255, 0.2) inset
+    background linear-gradient(to right, white 60%, rgba(255, 255, 255, 0) 100%)
+  .content
+    padding 20px
+    position relative
+    left 0
+    top 0
+    z-index 1
+  .title
+    font-size 20px
+    font-weight bold
+    padding-bottom 20px
+    color #ffffff
+    a
+      color inherit
+    a:hover
+      color #807f83
+  .summary
+    text-indent 2em
+    padding 40px 0 20px
+    line-height 20px
+    &::selection
+      background rgba(204, 204, 204, 0.18)
+      color #000
+.item-plain-text
+  @extend .content-list-layout
+  background url('../../image/avatar.jpg') no-repeat top right
+  background-size cover
+  .title a
+    color rgba(2, 0, 0, 0.6)
+  .summary
+    padding-right 120px
+.item-plain-text-with-title
+  @extend .content-list-layout
+  &::after
+    background #ffffff
+  .title
+    position absolute
+    left 10px
+    top -10px
+    border-radius 6px
+    box-shadow 0 0px 3px rgba(0, 1px, 0, 0.6), 0px 0px 10px rgba(255, 255, 255, 0.2)
+    background #ffffff
+    padding 0 6px
+    a
+      color rgba(2, 0, 0, 0.6)
+  .summary
+    text-indent 0
+    text-align center
+    span
+      display block
+      line-height 30px
+.item-image-text
+  @extend .content-list-layout
+  background-image url('../../image/avatar.jpg')
+  background-size cover
+  background-position center center
+  &::after
+    background linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, white 100%)
+  .post-header
+    position relative
+    padding-left 180px
+    height 120px
+    text-shadow 0 2px 3px rgba(0, 0, 0, 0.2)
+    .post-cover
+      position absolute
+      left 25px
+      top -50px
+      width 130px
+      height 170px
+      background url('../../image/bg_cut.jpg') no-repeat
+      background-size cover
+      border-radius 10px
+    .post-title
+      color #ffffff
+      a
+        color #ffffff
+  .post-footer
+    height 40px
+    a
+      display inline-block
+      line-height 40px
+    .read-more
+      color #ffffff
+      background-color #bebbaa
+      border-radius 20px
+      padding 0 10px
+      float left
+      margin-left 10px
+    .comments-count
+      float right
+      margin-right 10px
+      color rgba(2, 0, 0, 0.6)
+      &:hover
+        color #807f83
+.item-image-album-text
+  @extend .content-list-layout
+  background-image url('../../image/avatar.jpg')
+  background-size cover
+  background-position center center
+  &::after
+    background linear-gradient(to right, rgba(175, 196, 196, 0.6) 0%, rgba(0, 0, 0, 0) 60%)
+  .post-header
+    color #ffffff
+    width 450px
+    float left
+    .title
+      padding 30px 0 10px 0
+    .post-date
+      line-height 30px
+    .summary
+      padding 0
+      text-indent 0
+  .post-imageList
+    float right
+    width 300px
+    line-height 0
+    div, .image-count
+      display inline-block
+      width 90px
+      height 90px
+      background-size cover
+      background-repeat no-repeat
+    .image-count
+      line-height 90px
+      text-align center
+      background-color rgba(0, 0, 0, 0.5)
+      color #ffffff
+      vertical-align top
+      &:hover
+        color #bebbaa

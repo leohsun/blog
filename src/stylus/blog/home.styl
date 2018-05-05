@@ -1,0 +1,62 @@
+@import './elements'
+.content-list
+    width 800px
+    margin 0 auto
+    padding 100px 0 30px
+    &>div
+      margin-bottom 120px
+      transition transform 0.2s ease-out
+    &>div.hide
+      transform translateY(150px)
+      transition transform 0.2s ease-in
+  .loading-more
+    cursor pointer
+    text-align center
+    .loading-animation
+      // animation rote 3s linear infinite
+      position relative
+      width 62px
+      height 62px
+      margin 0 auto
+      .line
+        position absolute
+        &::before, &::after
+          pseudo-class()
+          background-color #F63D3A
+          position absolute
+          width 16px
+          height 16px
+          border-radius 8px
+      .line1
+        left 50%
+        top 50%
+        transform translate3d(-50%,-50%,0)
+        height 6px
+        width 16px
+        &::before
+          left 0
+          bottom 100%
+        &::after
+          background-color #193B48
+          left 0
+          top 100%
+      .line2
+        height 16px
+        width 6px
+        left 16px
+        top 50%
+        left 50%
+        transform translate3d(-50%,-50%,0)
+        &::before
+          top 0
+          right 100%
+          background-color #FDA543
+        &::after
+          background-color #19A68C
+          top 0
+          left 100%
+      &.isLoading
+        .line1
+          animation heightFlex .4s .4s ease-in alternate infinite
+        .line2
+          animation withFlex .4s ease-in alternate infinite
