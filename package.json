@@ -136,6 +136,7 @@
     "babel-preset-stage-1": "^6.24.1",
     "babel-register": "^6.26.0",
     "koa2-cors": "^2.0.5",
-    "nodemon": "^1.17.3"
+    "nodemon": "^1.17.3",
+    "transform-runtime": "0.0.0"
   }
 }
