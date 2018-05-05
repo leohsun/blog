@@ -58,3 +58,5 @@ typings/
 .env
 
 ecosystem.configuration.js
+.Ds_Store
+build
