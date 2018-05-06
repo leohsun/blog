@@ -87,7 +87,7 @@ export default class Home extends React.Component {
     return (
       <PageWrapper>
         <div className="content-list" ref={"content-list"}>
-          {this.state.data.map(item => <Card type={item.listCardType} data={item} key={item._id} />)}
+          {this.state.data && this.state.data.map(item => <Card type={item.listCardType} data={item} key={item._id} />)}
         </div>
         {
           this.state.hasMore && <div className="loading-more" onClick={this.loadMore}>
