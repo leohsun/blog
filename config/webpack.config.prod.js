@@ -59,7 +59,7 @@ const deployDate = ()=>{
   const hours = raw.getHours()
   const minutes = raw.getMinutes()
   const seconds = raw.getSeconds()
-  return `${year}${symbol}${month>9?month:'0'+month}${symbol}${day>9?day:'0'+day} ${hours>9?hours:'0'+hours}:${minutes>9?minutes:'0'+minutes}:${seconds>9?seconds:'0'+seconds}`
+  return `${year}${symbol}${month>9?month:'0'+month}${symbol}${day>9?day:'0'+day}-${hours>9?hours:'0'+hours}:${minutes>9?minutes:'0'+minutes}:${seconds>9?seconds:'0'+seconds}`
 }
 module.exports = {
   // Don't attempt to continue if there are any errors.
