@@ -50,6 +50,16 @@ const extractTextPluginOptions = shouldUseRelativeAssetPaths
 // This is the production configuration.
 // It compiles slowly and is focused on producing a fast and minimal bundle.
 // The development configuration is different and lives in a separate file.
+const deployDate = ()=>{
+  const raw = new Date()
+  const year = raw.getFullYear()
+  const month = raw.getMonth()+1
+  const day = raw.getDay()
+  const hours = raw.getHours()
+  const minutes = raw.getMinutes()
+  const seconds = raw.getSeconds()
+  return `${year}${symbol}${month>9?month:'0'+month}${symbol}${day>9?day:'0'+day} ${hours>9?hours:'0'+hours}:${minutes>9?minutes:'0'+minutes}:${seconds>9?seconds:'0'+seconds}`
+}
 module.exports = {
   // Don't attempt to continue if there are any errors.
   bail: true,
@@ -64,8 +74,8 @@ module.exports = {
     // Generated JS file names (with nested folders).
     // There will be one main bundle, and one file per asynchronous chunk.
     // We don't currently advertise code splitting but Webpack supports it.
-    filename: 'static/js/[name].[chunkhash:8].js',
-    chunkFilename: 'static/js/[name].[chunkhash:8].chunk.js',
+    filename: `static/js/[name].${deployDate()}.js`,
+    chunkFilename: `static/js/[name].[chunkhash:8].chunk.${deployDate()}.js`,
     // We inferred the "public path" (such as / or /my-project) from homepage.
     publicPath: publicPath,
     // Point sourcemap entries to original disk location (format as URL on Windows)
