@@ -7,7 +7,7 @@ module.exports = {
 
     // First application
     {
-      name      : 'Blog',
+      name      : 'Blog-server',
       script    : './server/index.js',
       env: {
         COMMON_VARIABLE: 'true'
@@ -28,7 +28,7 @@ module.exports = {
       host : '47.94.210.193',
       ref  : 'origin/master',
       repo : 'git@gitee.com:leohsun/blog.git',
-      path : '/home/www/blog',
+      path : '/home/www/blog/production',
       "ssh_options": "StrictHostKeyChecking=no",
       'post-deploy' : 'npm install --registry https://registry.npm.taobao.org && npm run build pm2 startOrRestart ecosystem.config.js --env production',
       env : {
