@@ -27,7 +27,7 @@ export default class Article extends React.Component {
     this.fetchDetail(this.props.match.params.id)
   }
   fetchDetail(id) {
-    http().get(`http://localhost:8000/article/detail/${id}`)
+    http().get(`https://api.topdiantop.top/blog/article/detail/${id}`)
       .then(data => {
         this.setState({
           detail: data.data,

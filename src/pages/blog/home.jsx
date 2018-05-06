@@ -54,7 +54,7 @@ export default class Home extends React.Component {
     this.setState({ isLoading: bool })
   }
   loadMore = () => {
-    http().get(`http://localhost:8000/article/list?page=${++this.currentPage}&size=${this.size}`)
+    http().get(`https://api.topdiantop.top/blog/article/list?page=${++this.currentPage}&size=${this.size}`)
       .then(data => {
         this.setState({
           data: data.data,
@@ -64,7 +64,7 @@ export default class Home extends React.Component {
       })
   }
   fetchList() {
-    http().get(`http://localhost:8000/article/list?page=${this.currentPage}&size=${this.size}`)
+    http().get(`https://api.topdiantop.top/blog/article/list?page=${this.currentPage}&size=${this.size}`)
       .then(data => {
         this.setState({
           data: data.data,

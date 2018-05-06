@@ -6,7 +6,7 @@ export const http = (fn)=>{
   return ajax
 }
 const ajax = axios.create({
-  baseURL: 'http://localhost:8000/',
+  baseURL: 'https://api.topdiantop.top/blog/',
   timeout: 2000,
 })
 ajax.interceptors.request.use((cfg) => {
