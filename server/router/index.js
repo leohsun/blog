@@ -6,7 +6,7 @@ const qs = require('querystring')
 const { getArrData } = require('./service/')
 const { ObjectId } = mongoose.Schema.Types
 
-router.post('/publish', koaBody(), async (ctx, next) => {
+router.post('/blog/publish', koaBody(), async (ctx, next) => {
   const Article = mongoose.model('Article')
   const Category = mongoose.model('Category')
   const body = ctx.request.body
@@ -58,7 +58,7 @@ router.post('/publish', koaBody(), async (ctx, next) => {
   }
 })
 
-router.get('/article/list', async (ctx, next) => {
+router.get('/blog/article/list', async (ctx, next) => {
   const qs = ctx.request.query
   const page =  Number(qs.page || 1) - 1
   const size = Number(qs.size || 10)
@@ -82,7 +82,7 @@ router.get('/article/list', async (ctx, next) => {
   }
 })
 
-router.get('/article/detail/:id', async (ctx, next) => {
+router.get('/blog/article/detail/:id', async (ctx, next) => {
   const Article = mongoose.model('Article')
   const Category = mongoose.model('Category')
   const art_id = ctx.params.id
