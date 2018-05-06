@@ -51,6 +51,7 @@ const extractTextPluginOptions = shouldUseRelativeAssetPaths
 // It compiles slowly and is focused on producing a fast and minimal bundle.
 // The development configuration is different and lives in a separate file.
 const deployDate = ()=>{
+  const symbol = '-'
   const raw = new Date()
   const year = raw.getFullYear()
   const month = raw.getMonth()+1
