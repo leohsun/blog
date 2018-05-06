@@ -10,7 +10,8 @@ module.exports = {
       name      : 'Blog-server',
       script    : './build/server/index.js',
       env: {
-        COMMON_VARIABLE: 'true'
+        COMMON_VARIABLE: 'true',
+        GENERATE_SOURCEMAP:'false'
       },
       env_production : {
         NODE_ENV: 'production'
