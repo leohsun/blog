@@ -10,7 +10,7 @@ const router = require('./router')
     await connect()
   })()
 const repHeader = (ctx,next)=>{
-  ctx.response.set('Access-Control-Allow-Origin', 'https://api.topdiantop.top');
+  ctx.response.set('Access-Control-Allow-Origin', 'https://www.topdiantop.top');
   ctx.response.set('Access-Control-Allow-Credentials', true);
   ctx.response.set('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
   ctx.response.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
