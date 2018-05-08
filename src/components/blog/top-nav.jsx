@@ -51,12 +51,12 @@ export default class Nav extends Component {
                             <ul className="dropDown"></ul>
                         </li>
                         <li className="category">
-                            <h2><Link to="/blog/category">分类</Link></h2>
+                            <h2><Link to="/blog/category/all">分类</Link></h2>
 
                             <ul className="dropDown">
-                                <li><a href="#/">分类01</a></li>
-                                <li><a href="#/">分类02</a></li>
-                                <li><a href="#/">分类03</a></li>
+                                <li><a href="/blog/category/diary">日记</a></li>
+                                <li><a href="/blog/category/media">媒体</a></li>
+                                <li><a href="/blog/category/code">代码</a></li>
                             </ul>
                         </li>
                         <li className="category">
@@ -68,12 +68,15 @@ export default class Nav extends Component {
                             </ul>
                         </li>
                         <li className="category">
-                            <h2><Link to="leave-message">留言</Link></h2>
+                            <h2><Link to="/blog/message">留言</Link></h2>
                             <ul className="dropDown"></ul>
                         </li>
                         <li className="category">
-                            <h2><Link to="about">关于</Link></h2>
-                            <ul className="dropDown"></ul>
+                            <h2>关于</h2>
+                            <ul className="dropDown">
+                                <li><a href="/blog/about">关于</a></li>
+                                <li><a href="/admin/login">后台</a></li>
+                            </ul>
                         </li>
                     </ul>
                     <ul className={this.state.showMenu ? 'btn show' : 'btn'} onClick={() => this.setState({ showMenu: !this.state.showMenu })}>

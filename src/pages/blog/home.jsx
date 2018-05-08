@@ -54,17 +54,17 @@ export default class Home extends React.Component {
     this.setState({ isLoading: bool })
   }
   loadMore = () => {
-    http().get(`https://api.topdiantop.top/blog/article/list?page=${++this.currentPage}&size=${this.size}`)
+    http().get(`article/list?page=${++this.currentPage}&size=${this.size}`)
       .then(data => {
         this.setState({
-          data: data.data,
+          data: this.state.data.concat(data.data),
           hasMore: data.hasMore,
           currentPage: data.page
         })
       })
   }
   fetchList() {
-    http().get(`https://api.topdiantop.top/blog/article/list?page=${this.currentPage}&size=${this.size}`)
+    http().get(`article/list?page=${this.currentPage}&size=${this.size}`)
       .then(data => {
         this.setState({
           data: data.data,

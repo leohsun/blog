@@ -9,6 +9,8 @@ import Blog from 'pages/blog'
 //admin
 import Admin from 'pages/admin'
 
+
+
 const NoMatch = ()=>{
   return <h2>404</h2>
 }

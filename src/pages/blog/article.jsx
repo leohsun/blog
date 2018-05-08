@@ -3,6 +3,8 @@ import PageWrapper from 'components/blog/page-wrapper'
 import 'stylus/blog/article'
 import { Link } from 'react-router-dom'
 import { http, formattedTime } from '../../util'
+import { inject} from 'mobx-react'
+@inject('commonStore')
 export default class Article extends React.Component {
   state = {
     showPre: false,
@@ -10,24 +12,13 @@ export default class Article extends React.Component {
     detail: [],
     preNav: null,
     nexNav: null,
-    tagMap: {
-      "media": "媒体",
-      "music": "音乐",
-      "video": "视频",
-      "image": "图片",
-      "code": "代码",
-      "diary": "日记",
-      "js": "JavaScript",
-      "html": "HTML",
-      "css": 'CSS',
-      "linux": 'Linux'
-    }
   }
   componentDidMount() {
     this.fetchDetail(this.props.match.params.id)
+    console.log(this.props.commonStore.tagMap)
   }
   fetchDetail(id) {
-    http().get(`https://api.topdiantop.top/blog/article/detail/${id}`)
+    http().get(`article/detail/${id}`)
       .then(data => {
         this.setState({
           detail: data.data,
@@ -83,7 +74,7 @@ export default class Article extends React.Component {
           <div className="article-footer">
             <div className="tag">
               <span className="time">{this.state.detail.meta && formattedTime(this.state.detail.meta.createdAt)}&emsp;</span>
-              {this.state.detail.categories && this.state.detail.categories.map(item =><Link className="cats" key={item} to={`/blog/category/${item}`}>{this.state.tagMap[item]}</Link>)}
+              {this.state.detail.categories && this.state.detail.categories.map(item =><Link className="cats" key={item} to={`/blog/category/${item}`}>{this.props.commonStore.tagMap[item]}</Link>)}
             </div>
             <div className="handleBtn"></div>
           </div>

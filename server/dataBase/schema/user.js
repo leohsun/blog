@@ -2,15 +2,19 @@ const mongoose = require('mongoose')
 
 
 const userSchema = new mongoose.Schema({
-  username:{
-    type:String,
-    unique:true
+  userName: {
+    type: String,
+    unique: true
   },
-  password:{
-    type:String
+  password: {
+    type: String
   },
-  email:{
-    type:String
+  email: {
+    type: String
+  },
+  role:{
+    type: String,
+    default:'user'
   },
   meta: {
     createdAt: {
@@ -23,10 +27,14 @@ const userSchema = new mongoose.Schema({
     }
   }
 })
-userSchema.pre('save',next=>{
-  if(this.isNew){
+userSchema.pre('save', function (next) {
+  if (this.isNew) {
     this.meta.createdAt = this.meta.updatedAt = Date.now()
-  }else{
+  } else {
     this.meta.updatedAt = Date.now()
   }
+  next()
 })
+
+
+mongoose.model('User', userSchema)

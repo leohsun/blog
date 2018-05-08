@@ -13,10 +13,7 @@ const articleSchema = mongoose.Schema({
     type :Number,
     default : 0
   },
-  categories: [{
-    type: ObjectId,
-    ref: 'Categroy'
-  }],
+  categories: [{type:String}],
   comments: [{
     type: ObjectId,
     ref: 'Comments'

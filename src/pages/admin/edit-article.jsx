@@ -2,24 +2,34 @@ import React from 'react'
 import { http } from '../../util'
 import 'stylus/admin/publish'
 import { Table, Icon, Divider } from 'antd';
-
 const { Column, ColumnGroup } = Table
 
 
 export default class Article extends React.Component {
   componentDidMount() {
-    http.get('/article/all')
+    this.fetchData(1)
+  }
+  fetchData(page, size) {
+    http('adminLoading').get(`article/list?page=${page || 1}&size=${size || this.state.size}`)
       .then(data => {
-        data.map(item => item.key = item._id)
-        console.log(data)
-        this.setState({ list: data })
+        data.data.map(item => item.key = item._id)
+        this.setState({
+          list: data.data,
+          page: data.page,
+          total: data.total
+        })
+
       })
   }
   state = {
     selectedRowKeys: [], // Check here to configure the default column
     loading: false,
-    data: []
-  };
+    data: [],
+    page: 0,
+    total: 0,
+    size: 5
+  }
+
   start = () => {
     this.setState({ loading: true });
     // ajax request after empty completing
@@ -31,8 +41,20 @@ export default class Article extends React.Component {
     }, 1000);
   }
   onSelectChange = (selectedRowKeys) => {
-    console.log('selectedRowKeys changed: ', selectedRowKeys);
     this.setState({ selectedRowKeys });
+  }
+  pageChange = (page, size) => {
+    this.fetchData(page)
+  }
+  handleDel(id){
+    if(!id) return
+    http('adminLoading').get(`article/del/${id}`)
+    .then((res)=>{
+      if(res.code === 200){
+
+        this.fetchData(this.state.page)
+      }
+    })
   }
   render() {
     const { loading, selectedRowKeys } = this.state;
@@ -42,7 +64,15 @@ export default class Article extends React.Component {
     };
     const hasSelected = selectedRowKeys.length > 0;
     return (
-      <Table dataSource={this.state.list}>
+      <Table
+        dataSource={this.state.list}
+        pagination={{
+          current: this.state.page,
+          total: this.state.total,
+          pageSize: this.state.size,
+          onChange: this.pageChange
+        }}
+      >
         <Column
           title="标题"
           dataIndex="title"
@@ -58,13 +88,12 @@ export default class Article extends React.Component {
           key="action"
           render={(text, record) => (
             <span>
-              <a href="javascript:;" title="查看"><Icon type="eye" /></a>
+              <Icon type="eye" />
               <Divider type="vertical" />
-              <a href="javascript:;" title="编辑"><Icon type="edit" /></a>
+              <Icon type="edit" />
               <Divider type="vertical" />
-              <a href="javascript:;" title="删除">
-                <Icon type="delete" />
-              </a>
+              <Icon onClick={_=>this.handleDel(text._id)} type="delete" />
+
             </span>
           )}
         />

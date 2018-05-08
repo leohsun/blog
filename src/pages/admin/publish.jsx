@@ -8,20 +8,19 @@ const Option = Select.Option
 const FormItem = Form.Item
 @inject('adminStore')
 @observer
+@Form.create()
 export default class Article extends React.Component {
   componentDidMount() {
     console.log(this.props.adminStore)
   }
   state = {
-    mainTitle: '幕后玩家',
-    categories: ['media'],
     loading: false,
     toolBarModalTips: '',
     toolBarModalVisible: false,
     showCarModal: false,
     toolBarModalTitle: '',
     toolBarModalLink: '',
-    bgImage: 'https://gss3.bdstatic.com/-Po3dSag_xI4khGkpoWK1HF6hhy/baike/w%3D268%3Bg%3D0/sign=711d63955b2c11dfded1b8255b1c05ed/bd3eb13533fa828bb5da3995f11f4134960a5ace.jpg',
+    bgImage: '',
     listCardType: 'text-image', //plain-text album text-title text-image
     bgList: [{
       uid: -1,
@@ -32,10 +31,7 @@ export default class Article extends React.Component {
     previewImage: '',
     previewVisible: false,
     HTML: '',
-    MD:  `\`\`\`
-    return \`<span class="\${regArr[i].cls}">\${$1}</span>\`
-    \`\`\`
-    `,
+    MD: '',
     card_title: '',
     card_cover: '',
     card_summary: '',
@@ -48,7 +44,7 @@ export default class Article extends React.Component {
       { value: "image", label: "图片" },
       { value: "code", label: "代码" },
       { value: "diary", label: "日记" },
-      { value: "js", label: "JavaScript"},
+      { value: "js", label: "JavaScript" },
       { value: "html", label: "HTML" },
       { value: "css", label: "CSS" },
       { value: "linux", label: "Linux" }
@@ -241,8 +237,8 @@ export default class Article extends React.Component {
         while (!mdArr[++i].trim().match(/^```/)) { //取下一项 不为``` 
           //处理code
           //转义特殊字符
-          const ripeStr = mdArr[i].replace(/</g,'&lt')
-          const codeWrapStr = '<code>' + ripeStr+ '</code>'
+          const ripeStr = mdArr[i].replace(/</g, '&lt')
+          const codeWrapStr = '<code>' + ripeStr + '</code>'
           const codeEl = this.code2el(codeWrapStr)
           lineOne += '<li>' + codeEl + '</li>'
         }
@@ -635,26 +631,39 @@ export default class Article extends React.Component {
   loading = (bool) => {
     this.props.adminStore.setLoading(bool)
   }
-  publish2server = async () => {
+  publish2server =  (e) => {
     // this.props.adminStore.setLoading(true)
-    this.md2html()
-    await this.awaitFn()
-    const { mainTitle, categories, HTML, MD, listCardType, bgImage } = this.state
-    http(this.loading).post('publish', {
-      categories,
-      HTML,
-      MD,
-      bgImage,
-      listCardType,
-      title: mainTitle,
-      summary: MD.slice(0, 50)
-    }).then(res => {
-      // this.props.adminStore.setLoading(false)
-      console.log(res)
-    }).catch(err => {
-      // this.props.adminStore.setLoading(false)
-      console.log(err)
-    })
+    e.preventDefault();
+    this.props.form.validateFields( async(err, values) => {
+      if (!err) {
+        this.md2html()
+        await this.awaitFn()
+        const { HTML, MD, listCardType, bgImage } = this.state
+        const bg = bgImage || 'https://static.topdiantop.top/blog/images/default_bg.jpg'
+        http(this.loading).post('admin/publish', {
+          title:values.title,
+          HTML,
+          MD,
+          listCardType,
+          bgImage: bg,
+          categories: values.categories,
+          summary: MD.slice(0, 50)
+        }).then(res => {
+          // this.props.adminStore.setLoading(false)
+          this.props.form.resetFields()
+          this.setState({
+            HTML:'',
+            MD:''
+          })
+          console.log(res)
+        }).catch(err => {
+          // this.props.adminStore.setLoading(false)
+          console.log(err)
+        })
+      }
+    });
+
+
   }
   render() {
     const uploadButton = (
@@ -667,6 +676,7 @@ export default class Article extends React.Component {
       labelCol: { span: 3, },
       wrapperCol: { span: 16 }
     }
+    const { getFieldDecorator } = this.props.form
     return (
       <div className="publish">
         <div className="aritcle-presets">
@@ -675,20 +685,26 @@ export default class Article extends React.Component {
             <FormItem
               {...formItemLayout}
               label="文章标题">
-              <Input
-                placeholder="标题:文章主标题"
-                value={this.state.mainTitle}
-                onChange={_ => this.saveVal2State('mainTitle', _)}
-              />
+              {getFieldDecorator('title', {
+                rules: [{ required: true, message: '请输入文章主标题!' }],
+              })(
+                <Input
+                  placeholder="标题:文章主标题"
+                />)}
             </FormItem>
             <FormItem
               {...formItemLayout}
               label="文章分类">
-              <Select mode="tags" defaultValue={this.state.categories} onChange={this.categoryChange}>
-                {this.state.tagMap.map(item => {
-                  return <Option key={item.value} value={item.value}>{item.label}</Option>
-                })}
-              </Select>
+              {getFieldDecorator('categories', {
+                rules: [{ required: true, message: '请选择文章分类，可多选!' }],
+              })(
+                <Select placeholder="请选择分类、可多选" mode="multiple">
+                  {this.state.tagMap.map(item => {
+                    return <Option key={item.value}>{item.label}</Option>
+                  })}
+                </Select>
+              )}
+
             </FormItem>
             <FormItem
               {...formItemLayout}
@@ -704,7 +720,7 @@ export default class Article extends React.Component {
                 {this.state.bgList.length >= 1 ? null : uploadButton}
               </Upload> */}
               <Input
-                placeholder="背景图片地址(暂时手动填入，后期增加上传功能)"
+                placeholder="背景图片地址(暂时手动填入，不填则默认首页背景图，后期增加上传功能)"
                 value={this.state.bgImage}
                 onChange={_ => this.saveVal2State('bgImage', _)}
               />

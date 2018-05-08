@@ -1,4 +1,4 @@
-import { observable ,action ,} from 'mobx'
+import { observable ,action} from 'mobx'
 
 class adminStore {
   @observable loading = false
@@ -8,4 +8,4 @@ class adminStore {
   }
 }
 
-export default new adminStore
+export default new adminStore()
