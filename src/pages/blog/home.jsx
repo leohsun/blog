@@ -13,11 +13,11 @@ export default class Home extends React.Component {
     limit: this.props.commonStore.scrollTop,
     isLoading: false,
     data: [],
-   
+
   }
   elsLimits = []
-  currentPage= 1
-  size= 2
+  currentPage = 1
+  size = 2
 
 
   getLimit(el) { //得到当前元素的极限值
@@ -56,28 +56,34 @@ export default class Home extends React.Component {
   loadMore = () => {
     http().get(`article/list?page=${++this.currentPage}&size=${this.size}`)
       .then(data => {
-        this.setState({
-          data: this.state.data.concat(data.data),
-          hasMore: data.hasMore,
-          currentPage: data.page
-        })
+        if (data.code == 200) {
+          const raw = data.data
+          this.setState({
+            data: this.state.data.concat(raw.data),
+            hasMore: raw.hasMore,
+            currentPage: raw.page
+          })
+        }
       })
   }
   fetchList() {
     http().get(`article/list?page=${this.currentPage}&size=${this.size}`)
       .then(data => {
-        this.setState({
-          data: data.data,
-          hasMore: data.hasMore,
-          currentPage: data.page
-        })
+        if (data.code == 200) {
+          const raw = data.data
+          this.setState({
+            data: raw.data,
+            hasMore: raw.hasMore,
+            currentPage: raw.page
+          })
+        }
       })
   }
   componentDidMount() {
-    
+
     this.fetchList()
   }
-  componentDidUpdate(){
+  componentDidUpdate() {
     this.getElsLimits()
   }
 

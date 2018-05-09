@@ -9,20 +9,29 @@ const router = require('./router')
     initSchemas()
     await connect()
   })()
-const repHeader = (ctx,next)=>{
+const repHeader = (ctx, next) => {
   ctx.response.set('Access-Control-Allow-Origin', 'https://www.topdiantop.top');
+  // ctx.response.set('Access-Control-Allow-Origin', 'http://localhost:3000');
   ctx.response.set('Access-Control-Allow-Credentials', true);
   ctx.response.set('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
   ctx.response.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
   return next()
 }
-const sCfg = {
-  key: 'blog:sess',
-  maxAge: 86400000,
-  signed: false
-}
+
+
 const Koa = require('koa');
 const app = new Koa();
+
+app.keys = ['leohsun-blog']
+const sCfg = {
+  key: 'blog:sess',
+  maxAge: 1800000, //30min
+  signed: true,
+  overwrite: true,
+  httpOnly: true,
+  signed: true,
+  rolling: true
+}
 app.use(repHeader)
   .use(koaSession(sCfg, app))
   .use(router.routes())

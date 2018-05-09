@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import {formattedTime} from '../../util'
+import { formattedTime } from '../../util'
 
 const PlainText = (props) => {
   const { data } = props
@@ -50,7 +50,7 @@ const Album = (props) => {
   const { data } = props
 
   const rawImgArr = data.HTML.match(/\<img[^>]+>/g)
-  const imgArr = rawImgArr.map(item => {
+  const imgArr = rawImgArr && rawImgArr.map(item => {
     const rawColletion = item.match(/"[^'"]+"/g)
     return {
       url: rawColletion[0].replace(/^['"]+|['"]+$/g, ''),
@@ -67,7 +67,7 @@ const Album = (props) => {
           <p className="summary">{data.summary}</p>
         </div>
         <div className="post-imageList">
-          {imgArr.map(item => {
+          {imgArr && imgArr.map(item => {
             return <div key={item.url} title={item.title} style={{ backgroundImage: `url(${item.url})` }}></div>
           })}
           <Link className="image-count" to={'/blog/article/' + data._id}>{imageCount}&nbsp;PICS</Link>

@@ -1,13 +1,13 @@
 import React from 'react'
 import Publish from './publish'
 import adminStore from '../../stores/admin'
+import {http} from '../../util'
 import EditArticle from './edit-article'
 import {inject,observer} from 'mobx-react'
 import { Link, Route } from 'react-router-dom'
 import { Layout, Menu, Icon, Spin } from 'antd'
 const { SubMenu } = Menu;
 const { Header, Sider, Content } = Layout
-
 
 
 const Analysis = () => <h1>analysis</h1>
@@ -26,18 +26,38 @@ const RouterView = () => {
 @observer
 export default class Home extends React.Component {
   state = {
-    collapsed: false
+    collapsed: false,
+    userName:''
   }
   toggle = () => {
     this.setState({
       collapsed: !this.state.collapsed,
     });
   }
-  componentDidMount() {
-    console.log(this.props.adminStore.loading);
+  componentDidMount(){
+    http().get('admin/checkLogin')
+     .then(res=>{
+       if(res.code === 200){
+         this.setState({userName:res.data.userName})
+       }
+     })
+     .catch(err=>{
+       console.error(err)
+     })
   }
-  componentWillReceiveProps(){
-    console.log(arguments)
+  handleLogout(){
+    http().get('admin/logout')
+    .then(res=>{
+      if(res.code===200){
+        window.location='/admin/login'
+      }
+    })
+    .catch(err=>{
+      console.error(err)
+    })
+  }
+  redirectTo=()=>{
+    window.location = '/blog'
   }
   render() {
     return (
@@ -69,8 +89,13 @@ export default class Home extends React.Component {
                   type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
                   onClick={this.toggle}
                 />
+                <div className="handle-user">
+                  <span>{this.state.userName}&nbsp;欢迎你!</span>&emsp;
+                  <span className="cur-pointer" onClick={this.handleLogout}>登出</span>&emsp;
+                  <span  className="cur-pointer" onClick={this.redirectTo}>Blog</span>
+                </div>
               </Header>
-              <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 'ß' }}>
+              <Content style={{ padding: 24, background: '#fff' }}>
                 <RouterView></RouterView>
               </Content>
             </Layout>

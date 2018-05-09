@@ -24,11 +24,15 @@ export default class Category extends React.Component {
       : `/getListByCategory/${cate}?page=${page}&size=${this.state.size}`
     http().get(url)
       .then(data => {
-        this.setState({
-          data: data.data,
-          page: data.page,
-          total: data.total
-        })
+        if (data.code == 200) {
+          const raw = data.data
+          this.setState({
+            data: raw.data,
+            page: raw.page,
+            total: raw.total
+          })
+        }
+
       })
   }
   pageChange = (page, size) => {

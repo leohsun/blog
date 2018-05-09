@@ -1,7 +1,8 @@
 import React from 'react'
 import { http } from '../../util'
 import 'stylus/admin/publish'
-import { Table, Icon, Divider } from 'antd';
+import Editor from 'components/admin/editor'
+import { Table, Icon, Divider, Modal } from 'antd';
 const { Column, ColumnGroup } = Table
 
 
@@ -12,11 +13,13 @@ export default class Article extends React.Component {
   fetchData(page, size) {
     http('adminLoading').get(`article/list?page=${page || 1}&size=${size || this.state.size}`)
       .then(data => {
-        data.data.map(item => item.key = item._id)
+        if (data.code !== 200) return
+        const raw = data.data
+        raw.data.map(item => item.key = item._id)
         this.setState({
-          list: data.data,
-          page: data.page,
-          total: data.total
+          list: raw.data,
+          page: raw.page,
+          total: raw.total
         })
 
       })
@@ -27,9 +30,13 @@ export default class Article extends React.Component {
     data: [],
     page: 0,
     total: 0,
-    size: 5
+    size: 5,
+    visilbe: false,
+    modelTitle: '',
+    HTML: '',
+    idNow: 0,
+    rawData: {}
   }
-
   start = () => {
     this.setState({ loading: true });
     // ajax request after empty completing
@@ -46,14 +53,69 @@ export default class Article extends React.Component {
   pageChange = (page, size) => {
     this.fetchData(page)
   }
-  handleDel(id){
-    if(!id) return
+  handleDel(id) {
+    if (!id) return
     http('adminLoading').get(`article/del/${id}`)
-    .then((res)=>{
-      if(res.code === 200){
+      .then((res) => {
+        if (res.code === 200) {
 
-        this.fetchData(this.state.page)
-      }
+          this.fetchData(this.state.page)
+        }
+      })
+  }
+  handleView(id) {
+    if (id !== this.state.idNow) {
+      http('adminLoading').get(`/article/detail/${id}`)
+        .then(res => {
+          this.setState({
+            rawData: res.data.data,
+            visible: true,
+            modelTitle: '预览文章',
+            idNow: res.data.data._id
+          })
+        })
+    } else {
+      this.setState({
+        visible: true,
+        modelTitle: '预览文章'
+      })
+    }
+  }
+  handleEdit(id) {
+    if (id !== this.state.idNow) {
+      http('adminLoading').get(`/article/detail/${id}`)
+        .then(res => {
+          this.setState({
+            rawData: res.data.data,
+            visible: true,
+            modelTitle: '编辑文章',
+            idNow: res.data.data._id
+          })
+        })
+    } else {
+      this.setState({
+        visible: true,
+        modelTitle: '编辑文章'
+      })
+    }
+  }
+  handleOk = (e) => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+  }
+  handleCancel = (e) => {
+    this.setState({
+      visible: false,
+    });
+  }
+  handleUpdate = (data) => {
+    http('adminLoading').post(`article/update/${this.state.idNow}`, data).then(res => {
+
+    }).catch(err => {
+      // this.props.adminStore.setLoading(false)
+      console.log(err)
     })
   }
   render() {
@@ -63,41 +125,66 @@ export default class Article extends React.Component {
       onChange: this.onSelectChange,
     };
     const hasSelected = selectedRowKeys.length > 0;
+    const viewHTML = <div dangerouslySetInnerHTML={{ __html: this.state.rawData.HTML }} />
     return (
-      <Table
-        dataSource={this.state.list}
-        pagination={{
-          current: this.state.page,
-          total: this.state.total,
-          pageSize: this.state.size,
-          onChange: this.pageChange
-        }}
-      >
-        <Column
-          title="标题"
-          dataIndex="title"
-          key='_id'
-        />
-        <Column
-          title="简介"
-          dataIndex="summary"
-          key='summary'
-        />
-        <Column
-          title="操作"
-          key="action"
-          render={(text, record) => (
-            <span>
-              <Icon type="eye" />
-              <Divider type="vertical" />
-              <Icon type="edit" />
-              <Divider type="vertical" />
-              <Icon onClick={_=>this.handleDel(text._id)} type="delete" />
-
-            </span>
-          )}
-        />
-      </Table>
+      <div>
+        <Table
+          dataSource={this.state.list}
+          pagination={{
+            current: this.state.page,
+            total: this.state.total,
+            pageSize: this.state.size,
+            onChange: this.pageChange
+          }}
+        >
+          <Column
+            title="标题"
+            dataIndex="title"
+            key='_id'
+          />
+          <Column
+            title="简介"
+            dataIndex="summary"
+            key='summary'
+          />
+          <Column
+            title="发布者"
+            dataIndex="poster"
+            key='poster'
+          />
+          <Column
+            title="编辑者"
+            dataIndex="editor"
+            key='editor'
+          />
+          <Column
+            title="操作"
+            key="action"
+            render={(text, record) => (
+              <span>
+                <Icon type="eye" onClick={_ => this.handleView(text._id)} className="cur-pointer" />
+                <Divider type="vertical" />
+                <Icon type="edit" onClick={_ => this.handleEdit(text._id)} className="cur-pointer" />
+                <Divider type="vertical" className="cur-pointer" />
+                <Icon className="cur-pointer" onClick={_ => this.handleDel(text._id)} type="delete" />
+              </span>
+            )}
+          />
+        </Table>
+        <Modal
+          style={{ top: '10px' }}
+          title={this.state.modelTitle}
+          visible={this.state.visible}
+          onOk={this.handleOk}
+          onCancel={this.handleCancel}
+          okText="确认"
+          cancelText="取消"
+          width={1200}
+        >
+          {this.state.modelTitle === '预览文章' && viewHTML}
+          {this.state.modelTitle === '编辑文章' && <Editor onExport={this.handleUpdate} data={this.state.rawData} btnContext='更新文章' />}
+        </Modal>
+      </div>
     );
   }
 }

@@ -11,6 +11,7 @@ export const http = (type)=>{
 
 const ajax = axios.create({
   baseURL: 'https://api.topdiantop.top/blog',
+  // baseURL: 'http://localhost:8000/blog',
   timeout: 5000,
   withCredentials:true
 })
@@ -24,13 +25,15 @@ ajax.interceptors.request.use((cfg) => {
 ajax.interceptors.response.use((res) => {
   loadingFn && loadingFn(false)
   if (res.status === 200) {
+    if(res.data.code===401){
+      window.location = '/admin/login'
+    }
     if (res.data.code === 200) {
       message.success(res.data.msg)
-      return res.data.data
     } else {
       message.warning(res.data.msg)
-      return res.data
     }
+    return res.data
   } else {
     message.error('通信错误!!')
   }

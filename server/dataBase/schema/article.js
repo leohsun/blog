@@ -9,6 +9,8 @@ const articleSchema = mongoose.Schema({
   readCount: Number,
   summary: String,
   listCardType: String,
+  poster:String,
+  editor:String,
   readCount: {
     type :Number,
     default : 0

@@ -75,7 +75,7 @@ export default class Nav extends Component {
                             <h2>关于</h2>
                             <ul className="dropDown">
                                 <li><a href="/blog/about">关于</a></li>
-                                <li><a href="/admin/login">后台</a></li>
+                                <li><a href="/admin/home">后台</a></li>
                             </ul>
                         </li>
                     </ul>

@@ -20,19 +20,22 @@ export default class Article extends React.Component {
   fetchDetail(id) {
     http().get(`article/detail/${id}`)
       .then(data => {
+        if(data.code ===200){
+          const raw = data.data
         this.setState({
-          detail: data.data,
-          preNav: data.preData && {
-            title: data.preData.title,
-            id: data.preData._id,
-            bgImage: data.preData.bgImage
+          detail: raw.data,
+          preNav: raw.preData && {
+            title: raw.preData.title,
+            id: raw.preData._id,
+            bgImage: raw.preData.bgImage
           },
-          nextNav: data.nextData && {
-            title: data.nextData.title,
-            id: data.nextData._id,
-            bgImage: data.nextData.bgImage
+          nextNav: raw.nextData && {
+            title: raw.nextData.title,
+            id: raw.nextData._id,
+            bgImage: raw.nextData.bgImage
           }
         })
+      }
       })
   }
   componentWillReceiveProps(nVal) {

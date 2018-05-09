@@ -1,0 +1,140 @@
+.aritcle-presets
+  box-shadow rgba(0, 1, 0, 0.6) 0px 0px 3px 0px, rgba(255, 255, 255, 0.2) 0px 0px 10px 0px inset
+  border-radius 6px
+  padding 10px 0
+  margin-bottom 12px
+  margin-bottom 12px
+.handle-btn
+  text-align center
+  padding 10px
+.editor
+  border-radius 6px
+  border 1px solid #cccccc
+  .editor-toolbar
+    display flex
+    height 30px
+    border-bottom 1px solid #cccccc
+    box-sizing border-box
+    user-select none
+    .btn
+      display inline-block
+      width 34px
+      height 29px
+      line-height 29px
+      text-align center
+      cursor pointer
+      color #999
+      &.disabled
+        background #f6f6f6
+      &:not(.disabled)
+        &:hover
+          background #f6f6f6
+          color #c97676
+    .column
+      display inline-block
+      border-right 1px solid #cccccc
+      padding 0 6px
+      &.layout
+        flex 1
+        text-align right
+  .handle-section
+    display flex
+    max-height 250px
+    .editor-edit, .editor-preview
+      flex 1
+      overflow-y scroll
+      word-wrap break-word
+    .editor-edit
+      border-right 1px solid #cccccc
+      textarea
+        display block
+        width 100%
+        height 250px
+        border none
+        resize vertical
+        margin 0
+        padding 10px
+        &::selection
+          background #f36363
+          color #f5f5f5
+.editor-style
+  font-size 16px
+  .editor-row
+    padding 1em 0
+    line-height 1.6em
+  .editor-tag
+    color #fff
+    padding 2px 8px
+    margin 0 2px
+    border-radius 15px
+    background #BBB
+    &::before, &::after
+      content '#'
+  .editor-card
+    border-radius 4px
+    overflow hidden
+    box-shadow 0 1px 2px rgba(0, 0, 0, 0.15), 0 0 1px rgba(0, 0, 0, 0.15)
+    a
+      display block
+      color inherit
+      display flex
+    .lfet-image-cover
+      width 150px
+    .right-content
+      flex 1
+      padding 0 20px
+      h2
+        color #918F90
+        padding 10px 0
+        margin 0
+  .split-line
+    display block
+    height 20px
+    background url('../../image/hr.gif') no-repeat center
+  .text-underline
+    padding-bottom 2px
+    border-bottom 1px solid #ffc81f
+  .text-delline
+    text-decoration line-through
+  blockquote
+    float right
+    width 220px
+    padding 10px
+    border-radius 4px
+    overflow hidden
+    box-shadow 0 0px 10px rgba(0, 0, 0, 0.1), 0 0px 10px rgba(0, 0, 0, 0.1) inset
+  .editor-list
+    font-size 15px
+    border 1px solid #efefef
+    padding 5px 20px
+    margin 0 0 30px 0
+    border-radius 3px
+    .list-prefix
+      color #ddd
+      padding-right 10px
+    li
+      line-height 1.75
+      padding 10px 0 10px 5px
+      &:not(:last-child)
+        border-bottom 1px solid #efefef
+  .code-section
+    word-break break-all
+    color #f8f8f2
+    text-shadow 0 1px rgba(0, 0, 0, 0.3)
+    font-family Consolas, Monaco, 'Andale Mono', monospace
+    background #0f141a
+    border-radius 3px
+    font-size 14px
+    padding 14px
+    .code-keyword
+      color #e66600
+    .code-varialbe
+      color #e6b531
+    .code-number
+      color #44b4cc
+    .code-string
+      color #63e600
+    .code-comment
+      color #708090
+  .editor-image
+    text-align center

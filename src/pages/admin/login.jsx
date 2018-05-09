@@ -14,7 +14,8 @@ export default class Login extends React.Component {
       if (!err) {
         const { userName } = values
         const { password } = values
-        this.postData(values)
+        const { email } = values
+        this.postData({ userName, password, email })
       }
     });
   }
@@ -22,7 +23,9 @@ export default class Login extends React.Component {
     const url = this.state.isLogin ? '/user/login' : '/user/register'
     http('adminLoading').post(url, data)
       .then(res => {
-        console.log(res)
+        if (res.code === 200) {
+          window.location.href = 'home'
+        }
       })
       .catch(err => {
         console.log(err)
