@@ -1,0 +1,27 @@
+.about-content
+  width 800px
+  margin 0 auto
+  .time-line
+    li
+      position relative
+      padding-left 1em
+      &::before
+        position absolute
+        left 0
+        top 50%
+        margin-top -4px
+        content ''
+        width 8px
+        height 8px
+        background #ffffff
+        border 2px solid #c97676
+        border-radius 50%
+        z-index 1
+      &:not(:last-child)::after
+        position absolute
+        left 3px
+        top 50%
+        content ''
+        width 0
+        height 20px
+        border-left 2px solid #e8e8e8

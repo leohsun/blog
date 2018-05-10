@@ -5,7 +5,7 @@ import { formattedTime } from '../../util'
 const PlainText = (props) => {
   const { data } = props
   return (
-    <div className="content-item item-plain-text hide" style={{ backgroundImage: 'url( ' + data.bgImage + ')' }}>
+    <div className="content-item item-plain-text hide" style={{ backgroundImage: 'url( ' + data.cover + ')' }}>
       <div className="content">
         <h3 className="title"><Link to={'/blog/article/' + data._id}>{data.title}</Link></h3>
         <p className="summary">{data.summary}</p>
@@ -27,10 +27,10 @@ const TextTitle = (props) => {
 const TextImage = (props) => {
   const { data } = props
   return (
-    <div className="content-item item-image-text hide" style={{ backgroundImage: `url(${data.bgImage})` }}>
+    <div className="content-item item-image-text hide" style={{ backgroundImage: `url(${data.cover})` }}>
       <div className="content">
         <div className="post-header">
-          <div className="post-cover" style={{ backgroundImage: `url(${data.bgImage})` }}></div>
+          <div className="post-cover" style={{ backgroundImage: `url(${data.cover})` }}></div>
           <div className="post-title">
             <h3 className="title"><Link to={'/blog/article/' + data._id}>{data.title}</Link></h3>
             <p className="post-date">发布日期:{formattedTime(data.meta.createdAt)}</p>
@@ -59,7 +59,7 @@ const Album = (props) => {
   })
   const imageCount = imgArr ? imgArr.length : 0
   return (
-    <div className="content-item item-image-album-text hide" style={{ backgroundImage: `url(${data.bgImage})` }}>
+    <div className="content-item item-image-album-text hide" style={{ backgroundImage: `url(${data.cover})` }}>
       <div className="content clear-fixed">
         <div className="post-header">
           <h3 className="title"><Link to={'/blog/article/' + data._id}>{data.title}</Link></h3>

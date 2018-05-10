@@ -1,11 +1,16 @@
 import React from 'react'
 import PageWrapper from 'components/blog/page-wrapper'
-
-export default class About extends React.Component{
-  render(){
-    return(
+import 'stylus/admin/about'
+export default class About extends React.Component {
+  render() {
+    return (
       <PageWrapper>
-        <h1 style={{textAlign:'center'}}>about</h1>
+        <div className="about-content">
+          <h1 style={{ textAlign: 'center' }}>about</h1>
+          <ul className="time-line">
+            <li className="success">v1.0成功上线</li>
+          </ul>
+        </div>
       </PageWrapper>
     )
   }

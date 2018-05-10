@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
-import {Link} from 'react-router-dom'
-
+import { Link } from 'react-router-dom'
+import { http } from '../../util'
 import 'stylus/blog/top-nav'
 import Fade from './fade'
 export default class Nav extends Component {
     state = {
         modalVisible: false,
-        showMenu: false
+        showMenu: false,
+        list: []
     }
     menuItemAnimateEnd(tar) {
         console.log(this.state.showMenu, 'end')
@@ -21,20 +22,34 @@ export default class Nav extends Component {
         }
     }
 
+    fetchData(keywords){
+        http().get(`article/search?keywords=${keywords}&page=1&size=5`)
+        .then(res => {
+            if (res.code === 200) {
+                console.log(this)
+                this.setState({
+                    list: res.data.data
+                })
+            }
+        })
+    }
+  
+    timer = null
+    onChange = (val) => {
+        const keywords = val.target.value
+        if(!keywords) return
+        clearTimeout(this.timer)
+        this.timer = setTimeout(()=>this.fetchData(keywords),1000)
+    }
     render() {
         const view = (<div className='searchBox'>
             <div className="inputBox">
-                <input type="text" placeholder="this is a window of the blog..." />
+                <input type="text" onChange={this.onChange} placeholder="this is a window of the blog..." />
                 <h3 onClick={() => this.setState({ modalVisible: !this.state.modalVisible })} className="blog-iconfont serch-btn">&#xe6b1;</h3>
             </div>
-            <ul className="result-list">
-                <li><a className="hoveLine" href="#/">01</a></li>
-                <li><a className="hoveLine" href="#/">02</a></li>
-                <li><a className="hoveLine" href="#/">03</a></li>
-                <li><a className="hoveLine" href="#/">04</a></li>
-                <li><a className="hoveLine" href="#/">05</a></li>
-                <li><a className="hoveLine" href="#/">06</a></li>
-            </ul>
+            {this.state.list.length > 0 && <ul className="result-list">
+                {this.state.list.map(item => <li key={item._id}><a className="hoveLine" href={'/blog/article/' + item._id}>{item.title}</a></li>)}
+            </ul>}
         </div>)
         return (
             <div className="top-nav">

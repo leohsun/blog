@@ -21,7 +21,7 @@ export default class Blog extends React.Component {
   render() {
     return (
       <Provider {...stores}>
-        <div>
+        <div className="blog-body">
           <NavBarTop></NavBarTop>
           <Route path='/blog' exact component={Home} ></Route>
           <Route path='/blog/article/:id' component={Article} ></Route>

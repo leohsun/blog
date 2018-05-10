@@ -31,8 +31,8 @@ export default class Edior extends React.Component {
     showCarModal: false,
     toolBarModalTitle: '',
     toolBarModalLink: '',
-    bgImage: '',
-    listCardType: '', //plain-text album text-title text-image
+    cover: '',
+    listCardType: 'text-image', //plain-text album text-title text-image
     bgList: [{
       uid: -1,
       name: 'xxx.png',
@@ -46,8 +46,8 @@ export default class Edior extends React.Component {
     card_title: '',
     card_cover: '',
     card_summary: '',
-    categories:[],
-    title:'',
+    categories: [],
+    title: '',
     card_link: 'http://www.topdiantop.top/',
     showWebPreview: false,
     tagMap: [
@@ -178,7 +178,7 @@ export default class Edior extends React.Component {
       },
     ]
     for (let i = 0; i < regExp.length; i++) {
-      console.log(rawStr)
+      console.log('rawStr:',rawStr)
       rawStr = rawStr.replace(regExp[i].reg, (m, $1, $2, $3, $4, $5) => {
 
         if (typeof $3 === 'number') { //说明是图片等
@@ -262,15 +262,16 @@ export default class Edior extends React.Component {
           lineOne += '<li>' + mdArr[i++].replace(/^(\d\.)/, '<span class="list-prefix">$1</span>') + '</li>'
         }
         html += '<ol class="editor-list">' + lineOne + '</ol>'
-      } else if (mdArr[i].match(/^\s*-.+/)) { //ul
+      } else if (mdArr[i].match(/^\s*-(?!--)/)) { //ul
         lineOne = '' //清空一下
-        while (mdArr[i] && mdArr[i].trim().match(/^\s*-.+/)) { //取下一项 不为```
+        while (mdArr[i] && mdArr[i].trim().match(/^-(?!--)/)) { //取下一项 不为-
           const item = this.symbol2el(mdArr[i])
           //处理ol
           lineOne += '<li>' + item.replace(/^(\s*-)/, '<span class="list-prefix">&weierp;</span>') + '</li>'
           i++
         }
         html += '<ul class="editor-list">' + lineOne + '</ul>'
+        i--
       } else {
         // 转< > &
         const encodeStr = mdArr[i].replace(/((<([^<>])+>)|&)/g, (m, $1) => {
@@ -351,10 +352,10 @@ export default class Edior extends React.Component {
     let ripeStr = ''
     let idx = 0
     for (let i = 0; i < arr.length; i++) {
-      if ((!arr[i - 1] || !arr[i - 1].match(/^[(\d\.)-][^-].*/)) && !!arr[i].match(/^[(\d\.)-][^-].*/)) { //前一个不存在或者正则不通过，则当前为1
+      if ((!arr[i - 1] || !arr[i - 1].match(/^(\d\.)|-[^-]*/)) && !!arr[i].match(/^(\d\.)|-[^-]*/)) { //前一个不存在或者正则不通过，则当前为1
         ripeStr += arr[i].replace(/^(\d\.)|-/, type === 'ol' ? '1.' : '-') + '\n'
         idx = 1
-      } else if ((arr[i - 1] && !!arr[i - 1].match(/^[(\d\.)-][^-].*/)) && !!arr[i].match(/^[(\d\.)-][^-].*/)) { //前一下有序号 当前过正则 则...
+      } else if ((arr[i - 1] && !!arr[i - 1].match(/^(\d\.)|-[^-]*/)) && !!arr[i].match(/^(\d\.)|-[^-]*/)) { //前一下有序号 当前过正则 则...
         ripeStr += arr[i].replace(/^(\d\.)|-/, type === 'ol' ? ++idx + '.' : '-') + '\n'
       } else {
         idx = 0
@@ -519,7 +520,7 @@ export default class Edior extends React.Component {
         break
     }
     const selectedText = this.state.toolBarModalTitle || tips
-    const linkUrl = this.state.toolBarModalLink || 'http://topdiantop.top/'
+    const linkUrl = this.state.toolBarModalLink || 'https://www.topdiantop.top/'
     this.starIdx += prefix.length
     this.endIdx = this.starIdx + selectedText.length
     return prefix + selectedText + ']' + '(' + linkUrl + ')' + nextfix
@@ -652,7 +653,7 @@ export default class Edior extends React.Component {
           await this.awaitFn
           let data = {}
           data.title = values.title
-          data.bgImage = this.state.bgImage || 'https://static.topdiantop.top/blog/images/default_bg.jpg'
+          data.cover = this.state.cover || 'https://static.topdiantop.top/blog/images/default_bg.jpg'
           data.listCardType = this.state.listCardType
           data.categories = values.categories
           data.summary = this.state.MD.slice(0, 200)
@@ -684,7 +685,7 @@ export default class Edior extends React.Component {
               {...formItemLayout}
               label="文章标题">
               {getFieldDecorator('title', {
-                initialValue:this.state.title,
+                initialValue: this.state.title,
                 rules: [{ required: true, message: '请输入文章主标题!' }],
               })(
                 <Input
@@ -695,7 +696,7 @@ export default class Edior extends React.Component {
               {...formItemLayout}
               label="文章分类">
               {getFieldDecorator('categories', {
-                initialValue:this.state.categories,
+                initialValue: this.state.categories,
                 rules: [{ required: true, message: '请选择文章分类，可多选!' }],
               })(
                 <Select placeholder="请选择分类、可多选" mode="multiple">

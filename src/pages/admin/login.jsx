@@ -1,6 +1,6 @@
 import { http } from '../../util'
 import React from 'react'
-import { Form, Icon, Input, Button, Checkbox } from 'antd'
+import { Form, Icon, Input, Button, Checkbox, message } from 'antd'
 const FormItem = Form.Item
 
 @Form.create()
@@ -25,6 +25,7 @@ export default class Login extends React.Component {
       .then(res => {
         if (res.code === 200) {
           window.location.href = 'home'
+          message.success(res.data.msg)
         }
       })
       .catch(err => {

@@ -3,7 +3,7 @@ const { ObjectId } = mongoose.Schema.Types
 
 const articleSchema = mongoose.Schema({
   title: String,
-  bgImage: String,
+  cover: String,
   MD: String,
   HTML: String,
   readCount: Number,

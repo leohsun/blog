@@ -2,7 +2,7 @@ import React from 'react'
 import { http } from '../../util'
 import 'stylus/admin/publish'
 import Editor from 'components/admin/editor'
-import { Table, Icon, Divider, Modal } from 'antd';
+import { Table, Icon, Divider, Modal, message } from 'antd';
 const { Column, ColumnGroup } = Table
 
 
@@ -13,6 +13,9 @@ export default class Article extends React.Component {
   fetchData(page, size) {
     http('adminLoading').get(`article/list?page=${page || 1}&size=${size || this.state.size}`)
       .then(data => {
+        if (data.data.code !== 200) {
+          message.success(data.data.msg)
+        }
         if (data.code !== 200) return
         const raw = data.data
         raw.data.map(item => item.key = item._id)
@@ -58,7 +61,7 @@ export default class Article extends React.Component {
     http('adminLoading').get(`article/del/${id}`)
       .then((res) => {
         if (res.code === 200) {
-
+          message.success(res.data.msg)
           this.fetchData(this.state.page)
         }
       })
@@ -67,12 +70,15 @@ export default class Article extends React.Component {
     if (id !== this.state.idNow) {
       http('adminLoading').get(`/article/detail/${id}`)
         .then(res => {
-          this.setState({
-            rawData: res.data.data,
-            visible: true,
-            modelTitle: '预览文章',
-            idNow: res.data.data._id
-          })
+          if (res.data.code !== 200) {
+            message.success(res.data.msg)
+            this.setState({
+              rawData: res.data.data,
+              visible: true,
+              modelTitle: '预览文章',
+              idNow: res.data.data._id
+            })
+          }
         })
     } else {
       this.setState({
@@ -85,13 +91,17 @@ export default class Article extends React.Component {
     if (id !== this.state.idNow) {
       http('adminLoading').get(`/article/detail/${id}`)
         .then(res => {
-          this.setState({
-            rawData: res.data.data,
-            visible: true,
-            modelTitle: '编辑文章',
-            idNow: res.data.data._id
-          })
+          if (res.code === 200) {
+            message.success(res.data.msg)
+            this.setState({
+              rawData: res.data.data,
+              visible: true,
+              modelTitle: '编辑文章',
+              idNow: res.data.data._id
+            })
+          }
         })
+
     } else {
       this.setState({
         visible: true,
@@ -112,7 +122,9 @@ export default class Article extends React.Component {
   }
   handleUpdate = (data) => {
     http('adminLoading').post(`article/update/${this.state.idNow}`, data).then(res => {
-
+      if (res.data.code !== 200) {
+        message.success(res.data.msg)
+      }
     }).catch(err => {
       // this.props.adminStore.setLoading(false)
       console.log(err)
@@ -146,6 +158,8 @@ export default class Article extends React.Component {
             title="简介"
             dataIndex="summary"
             key='summary'
+            width={300}
+            className="summary-col"
           />
           <Column
             title="发布者"

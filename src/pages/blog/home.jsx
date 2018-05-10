@@ -98,10 +98,10 @@ export default class Home extends React.Component {
         {
           this.state.hasMore && <div className="loading-more" onClick={this.loadMore}>
             加载更多...
-    <div className={this.state.isLoading ? 'loading-animation isLoading' : 'loading-animation'}>
+    {/* <div className={this.state.isLoading ? 'loading-animation isLoading' : 'loading-animation'}>
               <div className="line line1"></div>
               <div className="line line2"></div>
-            </div>
+            </div> */}
           </div>
         }
 

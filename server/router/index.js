@@ -172,6 +172,32 @@ router.get('/blog/article/list', async (ctx, next) => {
   }
 })
 
+router.get('/blog/article/search', async (ctx, next) => {
+  const qs = ctx.request.query
+  const key = qs.keywords
+  const page = Number(qs.page || 1) - 1
+  const size = Number(qs.size || 10)
+  const Article = mongoose.model('Article')
+  const skip = page * size
+  const keyword = new RegExp(`${key}`)
+  const total = await Article.find({ MD: keyword }).count()
+  const art_doc = await Article.find({ MD: keyword }).skip(skip).limit(size)
+  const hasMore = skip + art_doc.length < total
+  const res = {
+    size,
+    total,
+    data: art_doc,
+    hasMore,
+    page: page + 1,
+  }
+  ctx.body = {
+    sucess: true,
+    code: 200,
+    msg: '成功',
+    data: res
+  }
+})
+
 router.get('/blog/article/detail/:id', async (ctx, next) => {
   const Article = mongoose.model('Article')
   const Category = mongoose.model('Category')
@@ -232,7 +258,7 @@ router.post('/blog/article/update/:id', koaBody(), checkPoster(), async (ctx, ne
   ctx.body = {
     sucess: true,
     code: 200,
-    msg: '保存文章成功'
+    msg: '更新文章成功'
   }
 
 })
