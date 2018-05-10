@@ -55,7 +55,7 @@ const deployDate = ()=>{
   const raw = new Date()
   const year = raw.getFullYear()
   const month = raw.getMonth()+1
-  const day = raw.getDay()
+  const day = raw.getDate()
   const hours = raw.getHours()
   const minutes = raw.getMinutes()
   const seconds = raw.getSeconds()

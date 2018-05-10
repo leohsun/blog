@@ -47,7 +47,7 @@ export const formattedTime = (time, cfg = { symbol: "-" }) => {
   const raw = new Date(time)
   const year = raw.getFullYear()
   const month = raw.getMonth() + 1
-  const day = raw.getDay()
+  const day = raw.getDate()
   const hours = raw.getHours()
   const minutes = raw.getMinutes()
   const seconds = raw.getSeconds()
