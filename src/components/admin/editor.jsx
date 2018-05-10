@@ -180,7 +180,6 @@ export default class Edior extends React.Component {
     for (let i = 0; i < regExp.length; i++) {
       console.log('rawStr:',rawStr)
       rawStr = rawStr.replace(regExp[i].reg, (m, $1, $2, $3, $4, $5) => {
-
         if (typeof $3 === 'number') { //说明是图片等
           return regExp[i].fix.replace('LINK', $2).replace(/TITLE/g, $1)
         } else if (typeof $5 === 'number') { //卡片
@@ -262,6 +261,7 @@ export default class Edior extends React.Component {
           lineOne += '<li>' + mdArr[i++].replace(/^(\d\.)/, '<span class="list-prefix">$1</span>') + '</li>'
         }
         html += '<ol class="editor-list">' + lineOne + '</ol>'
+        i--
       } else if (mdArr[i].match(/^\s*-(?!--)/)) { //ul
         lineOne = '' //清空一下
         while (mdArr[i] && mdArr[i].trim().match(/^-(?!--)/)) { //取下一项 不为-
@@ -351,18 +351,20 @@ export default class Edior extends React.Component {
     let arr = rawStr.split('\n')
     let ripeStr = ''
     let idx = 0
+    const reg = type === 'ol' ? /^\d\./ : /^-(?!--)/
     for (let i = 0; i < arr.length; i++) {
-      if ((!arr[i - 1] || !arr[i - 1].match(/^(\d\.)|-[^-]*/)) && !!arr[i].match(/^(\d\.)|-[^-]*/)) { //前一个不存在或者正则不通过，则当前为1
+      if ((!arr[i - 1] || !arr[i - 1].match(/^(\d\.)|^-(?!--)/)) && !!arr[i].match(/^(\d\.)|^-(?!--)/)) { //前一个不存在或者正则不通过，则当前为1
         ripeStr += arr[i].replace(/^(\d\.)|-/, type === 'ol' ? '1.' : '-') + '\n'
         idx = 1
-      } else if ((arr[i - 1] && !!arr[i - 1].match(/^(\d\.)|-[^-]*/)) && !!arr[i].match(/^(\d\.)|-[^-]*/)) { //前一下有序号 当前过正则 则...
-        ripeStr += arr[i].replace(/^(\d\.)|-/, type === 'ol' ? ++idx + '.' : '-') + '\n'
+      } else if ((arr[i - 1] && !!arr[i - 1].match(/^(\d\.)|^-(?!--)/)) && !!arr[i].match(/^(\d\.)|^-(?!--)/)) { //前一下有序号 当前过正则 则...
+        ripeStr += arr[i].replace(/^(\d\.)|^-(?!--)/, type === 'ol' ? ++idx + '.' : '-') + '\n'
       } else {
         idx = 0
         ripeStr += arr[i] + '\n'
       }
 
     }
+    console.log('ripeStr: ',ripeStr)
     return ripeStr
   }
   slectedValFormattedNewline(type, inline) {
