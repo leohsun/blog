@@ -10,8 +10,8 @@ export const http = (type) => {
 }
 
 const ajax = axios.create({
-  // baseURL: 'https://api.topdiantop.top/blog',
-  baseURL: 'http://localhost:8000/blog',
+  baseURL: 'https://api.topdiantop.top/blog',
+  // baseURL: 'http://localhost:8000/blog',
   timeout: 5000,
   withCredentials: true
 })
