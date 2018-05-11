@@ -628,17 +628,17 @@ export default class Article extends React.Component {
   loading = (bool) => {
     this.props.adminStore.setLoading(bool)
   }
-  publish2server =  (e) => {
+  publish2server = (e) => {
     // this.props.adminStore.setLoading(true)
     e.preventDefault();
-    this.props.form.validateFields( async(err, values) => {
+    this.props.form.validateFields(async (err, values) => {
       if (!err) {
         this.md2html()
         await this.awaitFn()
         const { HTML, MD, listCardType, bgImage } = this.state
         const bg = bgImage || 'https://static.topdiantop.top/blog/images/default_bg.jpg'
         http(this.loading).post('admin/publish', {
-          title:values.title,
+          title: values.title,
           HTML,
           MD,
           listCardType,
@@ -647,12 +647,14 @@ export default class Article extends React.Component {
           summary: MD.slice(0, 50)
         }).then(res => {
           // this.props.adminStore.setLoading(false)
-          this.props.form.resetFields()
-          this.setState({
-            HTML:'',
-            MD:''
-          })
-          console.log(res)
+          if (res.data.code === 200) {
+            message.success(res.data.msg)
+            this.props.form.resetFields()
+            this.setState({
+              HTML: '',
+              MD: ''
+            })
+          }
         }).catch(err => {
           // this.props.adminStore.setLoading(false)
           console.log(err)

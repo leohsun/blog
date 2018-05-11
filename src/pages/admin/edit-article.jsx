@@ -2,7 +2,7 @@ import React from 'react'
 import { http } from '../../util'
 import 'stylus/admin/publish'
 import Editor from 'components/admin/editor'
-import { Table, Icon, Divider, Modal, message } from 'antd';
+import { Table, Icon, Divider, Modal, message, Popconfirm } from 'antd';
 const { Column, ColumnGroup } = Table
 
 
@@ -13,7 +13,7 @@ export default class Article extends React.Component {
   fetchData(page, size) {
     http('adminLoading').get(`article/list?page=${page || 1}&size=${size || this.state.size}`)
       .then(data => {
-        if (data.data.code !== 200) {
+        if (data.data.code === 200) {
           message.success(data.data.msg)
         }
         if (data.code !== 200) return
@@ -70,8 +70,8 @@ export default class Article extends React.Component {
     if (id !== this.state.idNow) {
       http('adminLoading').get(`/article/detail/${id}`)
         .then(res => {
-          if (res.data.code !== 200) {
-            message.success(res.data.msg)
+          if (res.code === 200) {
+            message.success(res.msg)
             this.setState({
               rawData: res.data.data,
               visible: true,
@@ -122,8 +122,8 @@ export default class Article extends React.Component {
   }
   handleUpdate = (data) => {
     http('adminLoading').post(`article/update/${this.state.idNow}`, data).then(res => {
-      if (res.data.code !== 200) {
-        message.success(res.data.msg)
+      if (res.code === 200) {
+        message.success(res.msg)
       }
     }).catch(err => {
       // this.props.adminStore.setLoading(false)
@@ -180,7 +180,9 @@ export default class Article extends React.Component {
                 <Divider type="vertical" />
                 <Icon type="edit" onClick={_ => this.handleEdit(text._id)} className="cur-pointer" />
                 <Divider type="vertical" className="cur-pointer" />
-                <Icon className="cur-pointer" onClick={_ => this.handleDel(text._id)} type="delete" />
+                <Popconfirm placement="topRight" title="确认删除？" onConfirm={_ => this.handleDel(text._id)} okText="Yes" cancelText="No">
+                  <Icon className="cur-pointer" type="delete" />
+                </Popconfirm>
               </span>
             )}
           />

@@ -5,24 +5,25 @@ const router = new Router()
 const { getArrData } = require('./service/')
 const { ObjectId } = mongoose.Schema.Types
 
-const saveCatsIt = (cats, art_id) => {
+const saveCatsIt = (cats, id) => {
+  const art_id = id + ''
   const Category = mongoose.model('Category')
   return new Promise(async (res, rej) => {
     try {
-      let cat_ids = []
       let i = 0
       saveCat()
       async function saveCat() {
-        let savedCat = await Category.findOne({ title: cats[i] })
+        const savedCat = await Category.findOne({ title: cats[i] })
         if (savedCat) {
-          const res = await Category.findByIdAndUpdate(savedCat._id, { articles: savedCat.articles })
+          const new_arts = [...savedCat.articles, art_id]
+          const res = await Category.findByIdAndUpdate(savedCat._id, { articles: new_arts })
         } else {
           const catModel = new Category({ title: cats[i], articles: [art_id] })
           const newCat = await catModel.save()
         }
         i++
         if (i >= cats.length) {
-          return res(cat_ids)
+          return res()
         } else {
           saveCat()
         }
@@ -37,7 +38,6 @@ const removeCatsIt = (remove_cats, art_id) => {
   const Category = mongoose.model('Category')
   return new Promise(async (res, rej) => {
     try {
-      let cat_ids = []
       let i = 0
       removeCat()
       async function removeCat() {
@@ -45,22 +45,21 @@ const removeCatsIt = (remove_cats, art_id) => {
         const old_arts = savedCat.articles
         let new_arts = []
         for (let i = 0; i < old_arts.length; i++) {
-          for (let j = 0; j < remove_cats.length; j++) {
-            if (old_arts[i] === remove_cats[j]) break
-            if (old_arts[i] !== remove_cats[j] && j === remove_cats.length - 1) {
-              new_arts.push(old_arts[i])
-            }
+          console.log(old_arts[i] + ' : ' + art_id,old_arts[i].toString()===art_id.toString())
+          if (old_arts[i].toString() !== art_id.toString()) {
+            new_arts.push(old_arts[i])
           }
         }
-        const res = await Category.findByIdAndUpdate(savedCat._id, { articles: new_arts })
-        i++
-        if (i >= remove_cats.length) {
-          return res(cat_ids)
-        } else {
-          removeCat()
-        }
-
+        console.log('new_arts:', new_arts)
+        await Category.findByIdAndUpdate(savedCat._id, { articles: new_arts })
       }
+      i++
+      if (i >= remove_cats.length) {
+        return res()
+      } else {
+        removeCat()
+      }
+
     } catch (err) {
       rej(err)
     }
@@ -248,11 +247,12 @@ router.post('/blog/article/update/:id', koaBody(), checkPoster(), async (ctx, ne
       }
     }
   }
-
+  console.log(add_cats, remove_cats)
   if (add_cats.length > 0) {
-    await saveCatsIt(add_cats, id)
-  } else if (remove_cats.length > 0) {
-    await removeCatsIt(remove_cats, id)
+    await saveCatsIt(add_cats, oldDoc._id)
+  }
+  if (remove_cats.length > 0) {
+    await removeCatsIt(remove_cats, oldDoc._id)
   }
 
   ctx.body = {

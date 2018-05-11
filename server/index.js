@@ -10,7 +10,8 @@ const router = require('./router')
     await connect()
   })()
 const repHeader = (ctx, next) => {
-  ctx.response.set('Access-Control-Allow-Origin', 'https://www.topdiantop.top');
+  const origin = ctx.request.header.origin
+  ctx.response.set('Access-Control-Allow-Origin', origin);
   // ctx.response.set('Access-Control-Allow-Origin', 'http://localhost:3000');
   ctx.response.set('Access-Control-Allow-Credentials', true);
   ctx.response.set('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');

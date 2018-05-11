@@ -27,12 +27,14 @@ export default class Article extends React.Component {
           summary: MD.slice(0, 30)
         }).then(res => {
           // this.props.adminStore.setLoading(false)
-          this.props.form.resetFields()
-          this.setState({
-            HTML: '',
-            MD: ''
-          })
-          console.log(res)
+          if (res.data.code === 200) {
+            message.success(res.data.msg)
+            this.props.form.resetFields()
+            this.setState({
+              HTML: '',
+              MD: ''
+            })
+          }
         }).catch(err => {
           // this.props.adminStore.setLoading(false)
           console.log(err)

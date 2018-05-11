@@ -48,7 +48,7 @@ export default class Home extends React.Component {
   handleLogout(){
     http().get('admin/logout')
     .then(res=>{
-      if(res.code===200){
+      if(res.data.code===200){
         window.location='/admin/login'
       }
     })
@@ -83,7 +83,7 @@ export default class Home extends React.Component {
               </Menu>
             </Sider>
             <Layout>
-              <Header style={{ background: '#fff', paddingLeft: 0, fontSize: '30px' }}>
+              <Header style={{ borderBottom:'1px solid #efefef', background:'#ffffff', paddingLeft: 0, fontSize: '30px' }}>
                 <Icon
                   className="trigger"
                   type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}

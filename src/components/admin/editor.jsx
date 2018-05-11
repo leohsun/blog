@@ -158,22 +158,22 @@ export default class Edior extends React.Component {
       },
       {
         title: '图片',
-        reg: /(?<!\\)\*\[([^\s(\[]+)\]\(([^\s\(]+)\)/g,
+        reg: /(?<!\\)\*\[([^\[]+)\]\(([^\s\(]+)\)/g,
         fix: '<div class="editor-image"><img src="LINK" alt="TITLE"/><h2 class="image-title">TITLE</h2></div>'
       },
       {
         title: '音乐',
-        reg: /(?<!\\)@\[([^\s]\[]+)\]\(([^\s\(]+)\)/g,
+        reg: /(?<!\\)@\[([^\[]+)\]\(([^\s\(]+)\)/g,
         fix: '<div class="editor-music"><audio src="LINK"/><h2 class="music-title">TITLE</h2></div>'
       },
       {
         title: '视频',
-        reg: /(?<!\\)#\[([^\s\])]+)\]\(([^\s\)]+)\)/g,
+        reg: /(?<!\\)#\[([^\[]+)\]\(([^\s\)]+)\)/g,
         fix: '<div class="editor-video"><video src="LINK"/><h2 class="vedio-title">TITLE</h2></div>'
       },
       {
         title: '卡片',
-        reg: /(?<!\\)\$\$([^\s\$)]+)\$\$\[([^\s\[]+)\]{([^\s}]+)}\(([^\s)]+)\)/g,
+        reg: /(?<!\\)\$\$([^\[\$)]+)\$\$\[([^\s\[]+)\]{([^\s}]+)}\(([^\s)]+)\)/g,
         fix: '<div class="editor-card"><a href="$4"><div class="lfet-image-cover"><img src="$2" alt="$1"/></div><div class="right-content"> <h2>$1</h2><p>$3</p></div></div></a> '
       },
     ]
@@ -711,7 +711,7 @@ export default class Edior extends React.Component {
             </FormItem>
             <FormItem
               {...formItemLayout}
-              label="背景图片">
+              label="封面图片">
               {/* <Upload
                 action="//jsonplaceholder.typicode.com/posts/"
                 listType="picture-card"
@@ -724,8 +724,8 @@ export default class Edior extends React.Component {
               </Upload> */}
               <Input
                 placeholder="背景图片地址(暂时手动填入，不填则默认首页背景图，后期增加上传功能)"
-                value={this.state.bgImage}
-                onChange={_ => this.saveVal2State('bgImage', _)}
+                value={this.state.cover}
+                onChange={_ => this.saveVal2State('cover', _)}
               />
             </FormItem>
             <FormItem

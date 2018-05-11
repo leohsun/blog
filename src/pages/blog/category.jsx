@@ -16,7 +16,11 @@ export default class Category extends React.Component {
   }
   componentDidMount() {
     this.fecthData(1)
-    console.log(this.props.commonStore.tagMap)
+  }
+  componentWillReceiveProps(val){
+    if(val.match.params.id === 'all'){
+      this.fecthData(1)
+    }
   }
   fecthData(page) {
     const cate = this.props.match.params.id
@@ -60,7 +64,7 @@ export default class Category extends React.Component {
     return (
       <PageWrapper>
         <div className="content-list">
-          <h2>当前位置：<Link to="/">首页</Link>&gt;&gt;分类&gt;&gt;{this.props.match.params.id}</h2>
+          <h2>当前位置：<Link to="/">首页</Link>&gt;&gt;<Link to="/blog/category/all">分类</Link>&gt;&gt;{this.props.match.params.id}</h2>
           <ul className="list-wrap">
             {this.state.data && this.state.data.map(item => this.ListItem({ data: item, map: this.props.commonStore.tagMap }))}
           </ul>
