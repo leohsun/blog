@@ -9,7 +9,7 @@ const router = require('./router')
     initSchemas()
     await connect()
   })()
-const allowedOrigin = process.env.NODE_ENV === 'production'?'https:api.topdiantop.top/blog' :'http://localhost:3000'
+const allowedOrigin = process.env.NODE_ENV === 'production'?'https://www.topdiantop.top' :'http://localhost:3000'
 const repHeader = (ctx, next) => {
   ctx.response.set('Access-Control-Allow-Origin', allowedOrigin);
   ctx.response.set('Access-Control-Allow-Credentials', true);
