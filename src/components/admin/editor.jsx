@@ -1,7 +1,6 @@
 import React from 'react'
-import { http } from '../../util'
 import 'stylus/admin/editor'
-import { Input, Upload, Icon, Modal, Select, Form, Button, Radio, Popover } from 'antd'
+import { Input, Modal, Select, Form, Button, Radio, Popover } from 'antd'
 const RadioGroup = Radio.Group
 const Option = Select.Option
 const FormItem = Form.Item
@@ -351,7 +350,6 @@ export default class Edior extends React.Component {
     let arr = rawStr.split('\n')
     let ripeStr = ''
     let idx = 0
-    const reg = type === 'ol' ? /^\d\./ : /^-(?!--)/
     for (let i = 0; i < arr.length; i++) {
       if ((!arr[i - 1] || !arr[i - 1].match(/^(\d\.)|^-(?!--)/)) && !!arr[i].match(/^(\d\.)|^-(?!--)/)) { //前一个不存在或者正则不通过，则当前为1
         ripeStr += arr[i].replace(/^(\d\.)|-/, type === 'ol' ? '1.' : '-') + '\n'

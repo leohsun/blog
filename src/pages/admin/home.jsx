@@ -1,6 +1,5 @@
 import React from 'react'
 import Publish from './publish'
-import adminStore from '../../stores/admin'
 import {http} from '../../util'
 import EditArticle from './edit-article'
 import {inject,observer} from 'mobx-react'
@@ -8,9 +7,6 @@ import { Link, Route } from 'react-router-dom'
 import { Layout, Menu, Icon, Spin } from 'antd'
 const { SubMenu } = Menu;
 const { Header, Sider, Content } = Layout
-
-
-const Analysis = () => <h1>analysis</h1>
 
 
 const RouterView = () => {

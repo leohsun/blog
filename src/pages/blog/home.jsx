@@ -1,7 +1,6 @@
 import React from 'react'
 import PageWrapper from 'components/blog/page-wrapper'
 import { observer, inject } from 'mobx-react'
-import { Link } from 'react-router-dom'
 import { http } from '../../util'
 import Card from 'components/blog/list-card'
 import 'stylus/blog/home'
@@ -56,7 +55,7 @@ export default class Home extends React.Component {
   loadMore = () => {
     http().get(`article/list?page=${++this.currentPage}&size=${this.size}`)
       .then(data => {
-        if (data.code == 200) {
+        if (data.code === 200) {
           const raw = data.data
           this.setState({
             data: this.state.data.concat(raw.data),
@@ -69,7 +68,7 @@ export default class Home extends React.Component {
   fetchList() {
     http().get(`article/list?page=${this.currentPage}&size=${this.size}`)
       .then(data => {
-        if (data.code == 200) {
+        if (data.code === 200) {
           const raw = data.data
           this.setState({
             data: raw.data,

@@ -3,7 +3,7 @@ import { http } from '../../util'
 import 'stylus/admin/publish'
 import Editor from 'components/admin/editor'
 import { inject, observer } from 'mobx-react'
-import { Input, Upload, Icon, Button, Radio, Popover, message } from 'antd'
+import { message } from 'antd'
 @inject('adminStore')
 @observer
 export default class Article extends React.Component {

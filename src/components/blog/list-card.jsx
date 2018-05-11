@@ -77,9 +77,6 @@ const Album = (props) => {
   )
 }
 export default class Card extends React.Component {
-  constructor(props) {
-    super(props)
-  }
 
   render() {
     const { type, data } = this.props

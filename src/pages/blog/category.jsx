@@ -28,7 +28,7 @@ export default class Category extends React.Component {
       : `/getListByCategory/${cate}?page=${page}&size=${this.state.size}`
     http().get(url)
       .then(data => {
-        if (data.code == 200) {
+        if (data.code === 200) {
           const raw = data.data
           this.setState({
             data: raw.data,

@@ -9,10 +9,9 @@ const router = require('./router')
     initSchemas()
     await connect()
   })()
+const allowedOrigin = process.env === 'production'?'https:api.topdiantop.top/blog' :'http://localhost:3000'
 const repHeader = (ctx, next) => {
-  const origin = ctx.request.header.origin
-  ctx.response.set('Access-Control-Allow-Origin', origin);
-  // ctx.response.set('Access-Control-Allow-Origin', 'http://localhost:3000');
+  ctx.response.set('Access-Control-Allow-Origin', allowedOrigin);
   ctx.response.set('Access-Control-Allow-Credentials', true);
   ctx.response.set('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
   ctx.response.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');

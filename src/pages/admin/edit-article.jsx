@@ -3,7 +3,7 @@ import { http } from '../../util'
 import 'stylus/admin/publish'
 import Editor from 'components/admin/editor'
 import { Table, Icon, Divider, Modal, message, Popconfirm } from 'antd';
-const { Column, ColumnGroup } = Table
+const { Column } = Table
 
 
 export default class Article extends React.Component {
@@ -131,12 +131,6 @@ export default class Article extends React.Component {
     })
   }
   render() {
-    const { loading, selectedRowKeys } = this.state;
-    const rowSelection = {
-      selectedRowKeys,
-      onChange: this.onSelectChange,
-    };
-    const hasSelected = selectedRowKeys.length > 0;
     const viewHTML = <div dangerouslySetInnerHTML={{ __html: this.state.rawData.HTML }} />
     return (
       <div>
