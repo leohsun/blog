@@ -1,4 +1,4 @@
-'use strict';
+
 
 const autoprefixer = require('autoprefixer');
 const path = require('path');
@@ -12,7 +12,6 @@ const eslintFormatter = require('react-dev-utils/eslintFormatter');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -400,17 +399,18 @@ module.exports = {
     // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
     // You can remove this if you don't use Moment.js:
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: "libs",
-      minChunks: function (module) {
-        // This prevents stylesheet resources with the .css or .scss extension
-        // from being moved from their original chunk to the vendor chunk
-        if(module.resource && (/^.*\.(css|scss)$/).test(module.resource)) {
-          return false;
-        }
-        return module.context && module.context.includes("node_modules");
-      }
-    }),
+    // new webpack.optimize.CommonsChunkPlugin({
+    //   name: "libs",
+    //   minChunks: function (module) {
+    //     console.log(module)
+    //     // This prevents stylesheet resources with the .css or .scss extension
+    //     // from being moved from their original chunk to the vendor chunk
+    //     if(module.resource && (/^.*\.(css|scss)$/).test(module.resource)) {
+    //       return false;
+    //     }
+    //     return module.context && module.context.includes("node_modules");
+    //   }
+    // }),
     
   ],
   // Some libraries import Node modules but don't use them in the browser.
@@ -423,6 +423,7 @@ module.exports = {
     child_process: 'empty',
   },
   externals : {
-    react: 'react'
+    React: 'react',
+    ReactDom: 'react-dom'
   }
 };

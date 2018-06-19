@@ -1,9 +1,5 @@
 const { initSchemas, connect } = require('./dataBase/index')
 const koaSession = require('koa-session')
-const koa = require('koa')
-const mongoose = require('mongoose')
-const Cors = require('koa2-cors')
-const Krouter = require('koa-router')
 const router = require('./router')
   ; (async () => {
     initSchemas()
@@ -29,7 +25,6 @@ const sCfg = {
   signed: true,
   overwrite: true,
   httpOnly: true,
-  signed: true,
   rolling: true
 }
 app.use(repHeader)
