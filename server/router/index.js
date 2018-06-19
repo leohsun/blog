@@ -2,8 +2,6 @@ const Router = require('koa-router')
 const mongoose = require('mongoose')
 const koaBody = require('koa-body')
 const router = new Router()
-const { getArrData } = require('./service/')
-const { ObjectId } = mongoose.Schema.Types
 
 const saveCatsIt = (cats, id) => {
   const art_id = id + ''
@@ -16,10 +14,10 @@ const saveCatsIt = (cats, id) => {
         const savedCat = await Category.findOne({ title: cats[i] })
         if (savedCat) {
           const new_arts = [...savedCat.articles, art_id]
-          const res = await Category.findByIdAndUpdate(savedCat._id, { articles: new_arts })
+          await Category.findByIdAndUpdate(savedCat._id, { articles: new_arts })
         } else {
           const catModel = new Category({ title: cats[i], articles: [art_id] })
-          const newCat = await catModel.save()
+          await catModel.save()
         }
         i++
         if (i >= cats.length) {
@@ -127,7 +125,6 @@ router.get('/blog/admin/logout', (ctx, next) => {
 })
 router.post('/blog/admin/publish', auth(), koaBody(), async (ctx, next) => {
   const Article = mongoose.model('Article')
-  const Category = mongoose.model('Category')
   let body = ctx.request.body
   body.poster = ctx.session.user.userName
   body.editor = ctx.session.user.userName
@@ -199,7 +196,6 @@ router.get('/blog/article/search', async (ctx, next) => {
 
 router.get('/blog/article/detail/:id', async (ctx, next) => {
   const Article = mongoose.model('Article')
-  const Category = mongoose.model('Category')
   const art_id = ctx.params.id
   const artOne = await Article.findById(art_id)
   await Article.findByIdAndUpdate(art_id, { readCount: artOne.readCount + 1 })
@@ -221,7 +217,6 @@ router.get('/blog/article/detail/:id', async (ctx, next) => {
 router.post('/blog/article/update/:id', koaBody(), checkPoster(), async (ctx, next) => {
   const id = ctx.params.id
   const Article = mongoose.model('Article')
-  const Category = mongoose.model('Category')
   let body = ctx.request.body
   body.editor = ctx.session.user.userName
   const oldDoc = await Article.findByIdAndUpdate(id, body) //更新文章
@@ -267,7 +262,6 @@ router.get('/blog/getListByCategory/:id', async (ctx, next) => {
   const page = Number(qs.page || 1) - 1
   const size = Number(qs.size || 10)
   const type = ctx.params.id
-  const req_id = ctx.params.id
   const Article = mongoose.model('Article')
   const Category = mongoose.model('Category')
   const cat = await Category.findOne({ title: type })

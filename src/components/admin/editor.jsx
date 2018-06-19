@@ -117,7 +117,7 @@ export default class Edior extends React.Component {
       },
       {
         title: '行内code',
-        reg: /(?<!\\)`(.+)`/g,
+        reg: /(?<!\\)`([^`]+)`/g,
         preFix: '<span class="inline-code">',
         nextFix: '</span>'
       },
@@ -650,7 +650,7 @@ export default class Edior extends React.Component {
       this.props.form.validateFields(async (err, values) => {
         if (!err) {
           this.md2html()
-          await this.awaitFn
+          await this.awaitFn()
           let data = {}
           data.title = values.title
           data.cover = this.state.cover || 'https://static.topdiantop.top/blog/images/default_bg.jpg'
