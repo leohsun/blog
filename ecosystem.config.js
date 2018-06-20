@@ -26,7 +26,7 @@ module.exports = {
   deploy: {
     production: {
       user: 'root',
-      host: '47.94.210.193',
+      host: '120.78.144.145',
       ref: 'origin/master',
       repo: 'git@gitee.com:leohsun/blog.git',
       path: '/home/www/blog/production',
