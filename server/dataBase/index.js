@@ -1,7 +1,7 @@
 const { resolve } = require('path')
 const glob = require('glob')
 const mongoose = require('mongoose')
-const db = 'mongodb://127.0.0.1:27017/blog'
+const db = 'mongodb://127.0.0.1:10086/blog'
 let maxTimes = 0
 mongoose.Promise = global.Promise
 module.exports = {
