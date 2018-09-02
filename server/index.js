@@ -5,10 +5,10 @@ const router = require('./router')
     initSchemas()
     await connect()
   })()
-const allowedOrigins = ['https://www.topdiantop.top','https://topdiantop.top']
+const allowedOrigins = ['https://www.topdiantop.top', 'https://topdiantop.top']
 const repHeader = (ctx, next) => {
-  console.log('222',ctx.header.origin)
-  const allowedOrigin = allowedOrigins.includes(ctx.originalUrl) ? ctx.originalUrl : 'https://www.topdiantop.top';
+  const { origin } = ctx.header;
+  const allowedOrigin = allowedOrigins.includes(origin) ? origin : 'https://www.topdiantop.top';
   ctx.response.set('Access-Control-Allow-Origin', allowedOrigin);
   ctx.response.set('Access-Control-Allow-Credentials', true);
   ctx.response.set('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
