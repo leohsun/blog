@@ -5,8 +5,9 @@ const router = require('./router')
     initSchemas()
     await connect()
   })()
-const allowedOrigin = process.env.NODE_ENV === 'production'?'https://www.topdiantop.top' :'http://localhost:3000'
+const allowedOrigins = ['https://www.topdiantop.top','https://topdiantop.top']
 const repHeader = (ctx, next) => {
+  const allowedOrigin = allowedOrigins.includes(ctx.origin) ? ctx.origin : 'https://www.topdiantop.top';
   ctx.response.set('Access-Control-Allow-Origin', allowedOrigin);
   ctx.response.set('Access-Control-Allow-Credentials', true);
   ctx.response.set('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
