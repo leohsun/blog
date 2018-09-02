@@ -8,7 +8,7 @@ module.exports = {
     // First application
     {
       name: 'Blog-server',
-      script: './build/server/index.js',
+      script: './server/index.js',
       env: {
         COMMON_VARIABLE: 'true',
         GENERATE_SOURCEMAP: 'false'
