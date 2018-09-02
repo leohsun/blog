@@ -7,7 +7,7 @@ const router = require('./router')
   })()
 const allowedOrigins = ['https://www.topdiantop.top','https://topdiantop.top']
 const repHeader = (ctx, next) => {
-  console.log('222',ctx)
+  console.log('222',ctx.header.origin)
   const allowedOrigin = allowedOrigins.includes(ctx.originalUrl) ? ctx.originalUrl : 'https://www.topdiantop.top';
   ctx.response.set('Access-Control-Allow-Origin', allowedOrigin);
   ctx.response.set('Access-Control-Allow-Credentials', true);
