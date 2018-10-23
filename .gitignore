@@ -60,3 +60,5 @@ typings/
 ecosystem.configuration.js
 .Ds_Store
 build
+
+package-lock.json
