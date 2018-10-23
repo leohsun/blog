@@ -13,6 +13,17 @@ const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
 
+function getModuleName(module) {
+  var sign = 'node_modules';
+  var signIndex = module.resource.indexOf(sign);
+  var pathSeparator = module.resource.slice(signIndex - 1, signIndex);
+  var modulePath = module.resource.substring(signIndex + sign.length + 1);
+  var moduleName = modulePath.substring(0, modulePath.indexOf(pathSeparator) );
+  moduleName = moduleName.toLowerCase();
+
+  return moduleName
+}
+
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
 const publicPath = paths.servedPath;
@@ -304,6 +315,48 @@ module.exports = {
     ],
   },
   plugins: [
+    // split vendor js into its own file
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks: function (module, count) {
+        // any required modules inside node_modules are extracted to vendor
+        return (
+          module.resource &&
+          /\.js$/.test(module.resource) &&
+          module.resource.indexOf(
+            path.join(__dirname, '../node_modules')
+          ) === 0
+        )
+      }
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'axios',
+      chunks: ['vendor'],
+      minChunks: function (module, count) {
+        return module.resource && ~['axios', 'qs', 'md5'].indexOf(getModuleName(module) ) && count >= 1
+      }
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'react',
+      chunks: ['vendor'],
+      minChunks: function (module, count) {
+        return module.resource && ~['vue', 'vue-router'].indexOf(getModuleName(module) ) && count >= 1
+      }
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'antd-ui',
+      chunks: ['vendor'],
+      minChunks: function (module, count) {
+        return module.resource && ~['antd'].indexOf(getModuleName(module) ) && count >= 1
+      }
+    }),
+
+    // extract webpack runtime and module manifest to its own file in order to
+    // prevent vendor hash from being updated whenever app bundle is updated
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'manifest',
+      chunks: Infinity,
+    }),
     // Makes some environment variables available in index.html.
     // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
     // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
