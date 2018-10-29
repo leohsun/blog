@@ -138,5 +138,7 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "webpack-progress-ora-plugin": "^1.2.1"
+  }
 }
