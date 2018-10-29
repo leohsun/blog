@@ -8,6 +8,7 @@ export default class About extends React.Component {
         <div className="about-content">
           <h1 style={{ textAlign: 'center' }}>about</h1>
           <ul className="time-line">
+            <li className="success">对项目js进行拆包，加快加载速度。<1540818550373></li>
             <li className="success">v1.0成功上线</li>
           </ul>
         </div>
