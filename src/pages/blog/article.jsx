@@ -27,12 +27,12 @@ export default class Article extends React.Component {
           preNav: raw.preData && {
             title: raw.preData.title,
             id: raw.preData._id,
-            bgImage: raw.preData.bgImage
+            cover: raw.preData.cover
           },
           nextNav: raw.nextData && {
             title: raw.nextData.title,
             id: raw.nextData._id,
-            bgImage: raw.nextData.bgImage
+            cover: raw.nextData.cover
           }
         })
       }
@@ -55,7 +55,7 @@ export default class Article extends React.Component {
             <div className={this.state.showPre ? 'previous switch show' : 'previous switch'} onMouseLeave={() => this.setState({ showPre: false })}>
               <div className="btn blog-iconfont" onMouseEnter={() => this.setState({ showPre: true })}>&#xe693;</div>
               <div className="widget">
-                <div className="cover" style={{ backgroundImage: `url(${this.state.preNav.bgImage})` }}></div>
+                <div className="cover" style={{ backgroundImage: `url(${this.state.preNav.cover})` }}></div>
                 <h3 className="title"><Link to={`/blog/article/${this.state.preNav.id}`}>{this.state.preNav.title}</Link></h3>
               </div>
             </div>
@@ -64,7 +64,7 @@ export default class Article extends React.Component {
             <div className={this.state.showNext ? 'next switch show' : 'next switch'} onMouseLeave={() => this.setState({ showNext: false })}>
               <div className="widget">
                 <h3 className="title"><Link to={`/blog/article/${this.state.nextNav.id}`}>{this.state.nextNav.title}</Link></h3>
-                <div className="cover" style={{ backgroundImage: `url(${this.state.nextNav.bgImage})` }}></div>
+                <div className="cover" style={{ backgroundImage: `url(${this.state.nextNav.cover})` }}></div>
               </div>
               <div className="btn blog-iconfont" onMouseEnter={() => this.setState({ showNext: true })}>&#xe694;</div>
             </div>

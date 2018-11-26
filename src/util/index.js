@@ -8,7 +8,7 @@ export const http = (type) => {
   }
   return ajax
 }
-const baseURL= process.env.NODE_ENV === 'production' ?'https://api.topdiantop.top/blog':'http://localhost:8000/blog'
+export const baseURL= process.env.NODE_ENV === 'production' ?'https://api.topdiantop.top/blog':'http://localhost:4444/blog'
 const ajax = axios.create({
   baseURL,
   timeout: 5000,

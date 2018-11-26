@@ -67,8 +67,8 @@ const Album = (props) => {
           <p className="summary">{data.summary}</p>
         </div>
         <div className="post-imageList">
-          {imgArr && imgArr.map(item => {
-            return <div key={item.url} title={item.title} style={{ backgroundImage: `url(${item.url})` }}></div>
+          {imgArr && imgArr.map((item,idx) => {
+            return <div key={item.url + idx} title={item.title} style={{ backgroundImage: `url(${item.url})` }}></div>
           })}
           <Link className="image-count" to={'/blog/article/' + data._id}>{imageCount}&nbsp;PICS</Link>
         </div>

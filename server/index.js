@@ -5,7 +5,7 @@ const router = require('./router')
     initSchemas()
     await connect()
   })()
-const allowedOrigins = ['https://www.topdiantop.top', 'https://topdiantop.top']
+const allowedOrigins = ['https://www.topdiantop.top', 'https://topdiantop.top','http://localhost:3000']
 const repHeader = (ctx, next) => {
   const { origin } = ctx.header;
   const allowedOrigin = allowedOrigins.includes(origin) ? origin : 'https://www.topdiantop.top';

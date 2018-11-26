@@ -61,7 +61,7 @@ export default class Article extends React.Component {
     http('adminLoading').get(`article/del/${id}`)
       .then((res) => {
         if (res.code === 200) {
-          message.success(res.data.msg)
+          message.success(res.msg)
           this.fetchData(this.state.page)
         }
       })

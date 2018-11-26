@@ -48,6 +48,7 @@
     "mobx": "^4.2.0",
     "mobx-react": "^5.0.0",
     "mongoose": "^5.0.16",
+    "nanoid": "^2.0.0",
     "nodemon": "^1.17.3",
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.2.0",

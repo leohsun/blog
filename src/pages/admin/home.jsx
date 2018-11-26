@@ -44,7 +44,7 @@ export default class Home extends React.Component {
   handleLogout(){
     http().get('admin/logout')
     .then(res=>{
-      if(res.data.code===200){
+      if(res.code===200){
         window.location='/admin/login'
       }
     })
