@@ -36,12 +36,7 @@ export default class Edior extends React.Component {
 		previewVisible: false,
 		HTML: '',
 		// bgList:[],
-		MD: `
-    \`\`\`
-   // <h2>表达式全集</h2>
-
-    \`\`\`
-    `,
+		MD: '',
 		card_title: '',
 		card_cover: '',
 		card_summary: '',
@@ -93,7 +88,6 @@ export default class Edior extends React.Component {
 	};
 	// handle editor
 
-<<<<<<< HEAD
 	//md2html
 	symbol2el(str) {
 		let rawStr = str.trim();
@@ -198,132 +192,6 @@ export default class Edior extends React.Component {
 	code2el(str) {
 		const regArr = [
 			//关键字满足 $1-$2-$3
-=======
-  //md2html
-  symbol2el(str) {
-    let rawStr = str
-    const regExp = [
-      {
-        title: '分割线',
-        reg: /^([^\\]|\s+)---(\s)*$/,
-        preFix: '<span class="split-line">',
-        nextFix: '</span>'
-      },
-      {
-        title: '加粗',
-        reg: /([^\\])\*\*([^\s\*]+)\*\*/g,
-        preFix: '<span class="text-bold">',
-        nextFix: '</span>'
-      },
-      {
-        title: '斜体',
-        reg: /([^\\])\*([^\s\*]+)\*/g,
-        preFix: '<span class="text-italic">',
-        nextFix: '</span>'
-      },
-      {
-        title: '行内code',
-        reg: /([^\\])`([^`]+)`/g,
-        preFix: '<span class="inline-code">',
-        nextFix: '</span>'
-      },
-      {
-        title: '删除线',
-        reg: /([^\\])~~(.+)~~/g,
-        preFix: '<span class="text-delline">',
-        nextFix: '</span>'
-      },
-      {
-        title: '下划线',
-        reg: /([^\\])__(.+)__/g,
-        preFix: '<span class="text-underline">',
-        nextFix: '</span>'
-      },
-      {
-        title: '标题',
-        reg: /([^\\])##(.+)/g,
-        preFix: '<h2 class="text-title">',
-        nextFix: '</h2>'
-      },
-      {
-        title: '引用',
-        reg: /(([^\\])|[^<]+)>(.+)/g,
-        preFix: '<blockquote><p>',
-        nextFix: '</p></blockquote>'
-      },
-      {
-        title: '链接',
-        reg: /([^\\])!\[([^\s(!\[)]+)\]\(([^\s\(]+)\)/g,
-        fix: '<a class="editor-link" href="LINK" alt="TITLE">TITLE</a>'
-      },
-      {
-        title: '标签文本', //#this#
-        reg: /([^\\])\?\[([^\s(\[]+)\]\(([^\s\(]+)\)/g,
-        fix: '<a class="editor-tag" href="LINK">TITLE</a>'
-      },
-      {
-        title: '图片',
-        reg: /([^\\])\*\[([^\[]+)\]\(([^\s\(]+)\)/g,
-        fix: '<div class="editor-image"><img src="LINK" alt="TITLE"/><h2 class="image-title">TITLE</h2></div>'
-      },
-      {
-        title: '音乐',
-        reg: /([^\\])@\[([^\[]+)\]\(([^\s\(]+)\)/g,
-        fix: '<div class="editor-music"><audio src="LINK"/><h2 class="music-title">TITLE</h2></div>'
-      },
-      {
-        title: '视频',
-        reg: /([^\\])#\[([^\[]+)\]\(([^\s\)]+)\)/g,
-        fix: '<div class="editor-video"><video src="LINK"/><h2 class="vedio-title">TITLE</h2></div>'
-      },
-      {
-        title: '卡片',
-        reg: /([^\\])\$\$([^\[\$)]+)\$\$\[([^\s\[]+)\]{([^\s}]+)}\(([^\s)]+)\)/g,
-        fix: '<div class="editor-card"><a href="$4"><div class="lfet-image-cover"><img src="$2" alt="$1"/></div><div class="right-content"> <h2>$1</h2><p>$3</p></div></div></a> '
-      },
-    ]
-    for (let i = 0; i < regExp.length; i++) {
-      rawStr = rawStr.replace(regExp[i].reg, (m, $1, $2, $3, $4, $5) => {
-        if (typeof $3 === 'number') { //说明是图片等
-          return regExp[i].fix.replace('LINK', $2).replace(/TITLE/g, $1)
-        } else if (typeof $5 === 'number') { //卡片
-          return regExp[i].fix.replace(/\$1/g, $1).replace('$2', $2).replace('$3', $3).replace('$4', $4)
-        }
-        const key = $1 || ''
-        return regExp[i].preFix + key + regExp[i].nextFix
-      })
-    }
-
-    return rawStr
-  }
-  code2el(str) {
-    const regArr = [ //关键字满足 $1-$3-$4
-      {
-        type: '关键字',
-        reg: /(>\.|[^<>\w'"`]|\s)(return|document|window|true|false|null|export|import|break|case|catch|continue|default|delete|do|else|finally|for|function|if|instanceof|in|new|return|switch|this|throw|try|typeof|var|let|const|void|while|with)(?=\.|[^<>\w]|\s<)/g,
-        cls: 'code-keyword'
-      },
-      {
-        type: '字符串',
-        reg: /(>[^<]*|\s)((`[^`]*`)|('[^']*')|("[^"]*"))(?=[^<]*<)/g,
-        cls: 'code-string'
-      },
-      {
-        type: '数字',
-        reg: /(>[^<>'"`]*|\s)(\d+)(?=[^<>\w'"`]*<)/g,
-        cls: 'code-number'
-      },
-      {
-        type: '注释',
-        reg: /(>[^<>'"`]*|\s)(\/\/[^<]+)(?=\s*[^<>]*<)/g,
-        cls: 'code-comment'
-      },
-      {
-        type: '变量',
-        reg: /(>[^<>'"`]*|\s)([a-zA-Z]\w*)(?=\s+|=[^<>]*<)/g,
-        cls: 'code-varialbe'
-      },
->>>>>>> 00391bd3d69984d34f6711f12de6c2bc07cdfa9c
 
 			{
 				type: '注释',
