@@ -23,7 +23,7 @@ const app = new Koa();
 app.keys = ['leohsun-blog']
 const sCfg = {
   key: 'blog:sess',
-  maxAge: 1800000, //30min
+  maxAge: 18000000, //300min
   signed: true,
   overwrite: true,
   httpOnly: true,

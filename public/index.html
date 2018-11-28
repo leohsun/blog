@@ -22,16 +22,19 @@
     -->
     <title>blog</title>
     <style>
-    html,body {
-  background-color: #1d1f20;
-  margin: 0;
-  height: 100%;
-}
+    #loadingStage {
+      background: #1d1f20;
+      position: fixed;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+    }
 
 #box {
   height: 100px;
   width: 100px;
-  position: fixed;
+  position: absolute;
   top: calc(50% - 50px);
   left: calc(50% - 50px);
   /* perspective: 1000px; */
@@ -96,12 +99,15 @@
       You need to enable JavaScript to run this app.
     </noscript>
     <div id="root">
-      <div id="box">
-          <div class="thing"></div>
-          <div class="thing"></div>
-          <div class="thing"></div>
-          <div class="thing"></div>
+      <div id="loadingStage">
+          <div id="box">
+              <div class="thing"></div>
+              <div class="thing"></div>
+              <div class="thing"></div>
+              <div class="thing"></div>
+          </div>
       </div>
+      
     </div>
     <!--
       This HTML file is a template.

@@ -60,6 +60,6 @@ typings/
 ecosystem.configuration.js
 .Ds_Store
 build
-.upload
+upload
 
 package-lock.json

@@ -31,12 +31,33 @@ export default class Edior extends React.Component {
 		toolBarModalTitle: '',
 		toolBarModalLink: '',
 		listCardType: 'text-image', //plain-text album text-title text-image
-		imageUrl: 'https://static.topdiantop.top/images/blog_default_bg.jpg',
+		cover: 'https://static.topdiantop.top/images/blog_default_bg.jpg',
 		previewImage: '',
 		previewVisible: false,
 		HTML: '',
 		// bgList:[],
-		MD: '',
+		MD: `
+		\`\`\`
+		// 加密密码
+		// 加盐('topdiantop')+取反+md5
+		import md5 from 'md5';
+		var salt = str  => str + 'salt';
+		var reverse = str  => str.split('').reverse().join('');
+		var compose(salt,reverse) => reverse(salt(str));
+		var encrypt = pwd => md5(compose(pwd));
+		var ripePwd = encrypt('leohsunpwd');
+		let  hasNumber = false;
+		const  arr =  [1,3,'a'];
+		for  (let  i = 0,len = arr.length; i < len;  i++) {
+			if  (typeof  arr[i] === 'number') {
+				hasNumber = true;
+				break;
+			}
+		}
+		console.log(hasNumber);
+		// -> true
+		\`\`\`
+		`,
 		card_title: '',
 		card_cover: '',
 		card_summary: '',
@@ -77,7 +98,7 @@ export default class Edior extends React.Component {
 	};
 	imageRemove = () => {
 		this.setState({
-			imageUrl: ''
+			cover: ''
 		});
 	};
 	listCardTypeonChange = (e) => {
@@ -100,37 +121,37 @@ export default class Edior extends React.Component {
 			},
 			{
 				title: '加粗',
-				reg: /^\*\*([^\s\*]+)\*\*/g,
+				reg: /\*\*([^\s\*]+)\*\*/g,
 				preFix: '<span class="text-bold">',
 				nextFix: '</span>'
 			},
 			{
 				title: '斜体',
-				reg: /^\*([^\s\*]+)\*/g,
+				reg: /\*([^\s\*]+)\*/g,
 				preFix: '<span class="text-italic">',
 				nextFix: '</span>'
 			},
 			{
 				title: '行内code',
-				reg: /^`([^`]+)`/g,
+				reg: /`([^`]+)`/g,
 				preFix: '<span class="inline-code">',
 				nextFix: '</span>'
 			},
 			{
 				title: '删除线',
-				reg: /^~~(.+)~~/g,
+				reg: /~~([^~]+)~~/g,
 				preFix: '<span class="text-delline">',
 				nextFix: '</span>'
 			},
 			{
 				title: '下划线',
-				reg: /^__(.+)__/g,
+				reg: /__([^_]+)__/g,
 				preFix: '<span class="text-underline">',
 				nextFix: '</span>'
 			},
 			{
 				title: '标题',
-				reg: /^##(.+)/g,
+				reg: /##(.+)/g,
 				preFix: '<h2 class="text-title">',
 				nextFix: '</h2>'
 			},
@@ -182,7 +203,14 @@ export default class Edior extends React.Component {
 					//卡片
 					return regExp[i].fix.replace(/\$1/g, $1).replace('$2', $2).replace('$3', $3).replace('$4', $4);
 				}
-				const key = $1 || '';
+				let key = $1 || '';
+				if(regExp[i].preFix==='<span class="inline-code">') {
+					key = '<code>'+ key+ '</code>';
+					key = this.code2el(key.replace(/\s/g,'&nbsp;'));
+				}
+				if(regExp[i].preFix==='<h2 class="text-title">') { // add a tag to title
+					return `<h2 class="text-title" id="${key}">` + key + regExp[i].nextFix;
+				}
 				return regExp[i].preFix + key + regExp[i].nextFix;
 			});
 		}
@@ -195,29 +223,34 @@ export default class Edior extends React.Component {
 
 			{
 				type: '注释',
-				reg: /(<code>(&nbsp;)*)(\/\/[^<]+)(?=<\/code>)/g,
+				reg: /(<code>?(&nbsp;)*)(\/\/[^<]+)(?=<\/code>)/g,
 				cls: 'code-comment'
 			},
 			{
 				type: '字符串',
-				reg: /(=(&nbsp;)*)(`[^`]*`|'[^']*'|"[^"]*")(?=\s*[^<>])/g,
+				reg: /((&nbsp;)*)(`[^`]*`|'[^']*'|"[^"]*")(?=\s*[^<>])/g,
 				cls: 'code-string'
 			},
-			{
-				type: '变量',
-				reg: /([^'"`][\s\.=](&nbsp;)*)([a-zA-Z_-]+\w*)(?==?[^\s=>]*;?<)/g,
-				cls: 'code-varialbe'
-			},
+			
 			{
 				type: '数字',
-				reg: /([^'"`](&nbsp;)*)(\d+)(?=[^'"`%])/g,
+				reg: /([^'"`\w](&nbsp;)?)(\d+)(?=[^'"`%\w])/g,
 				cls: 'code-number'
+			},{
+				type: '符号',
+				reg: /([^'"`\w](&nbsp;)?)(\+\+?|--?|=&gt;|=>|==?=?|\/)(?=[^'"`%\w])/g,
+				cls: 'code-symbol'
 			},
 			{
 				type: '关键字',
-				reg: /(\s*(&nbsp;)*)(return|document|window|true|false|null|export|import|break|case|catch|continue|default|delete|do|else|finally|for|function|if|instanceof|in|new|return|switch|this|throw|try|typeof|var|let|const|void|while|with)(?=\.|\s)/g,
+				reg: /((&nbsp;)|[^\w])(return|document|window|true|false|null|export|import|break|case|catch|continue|default|delete|do|else|finally|for|function|if|instanceof|in|new|return|switch|this|throw|try|typeof|var|let|const|void|while|with|from)(?=\.|(&nbsp;)|;)/g,
 				cls: 'code-keyword'
-			}
+			},
+			// {
+			// 	type: '变量',
+			// 	reg: /([\.]|(&nbsp;))([a-zA-Z_-]+\w*)(?=(&nbsp;)?=?[^\s=>]*;?<)/g,
+			// 	cls: 'code-varialbe'
+			// },
 		];
 		let rawStr = str;
 		for (let i = 0; i < regArr.length; i++) {
@@ -225,12 +258,13 @@ export default class Edior extends React.Component {
 			let canBeBreak = false;
 			rawStr = rawStr
 				.replace(regArr[i].reg, (m, $1, $2, $3, $4) => {
-					console.log(regArr[i].type, '__$1:', $1, '$2:', $2, '$3:', $3);
-					canBeBreak = (regArr[i].cls == 'code-comment' || regArr[i].cls == 'code-string') && !!$3;
-					return `${typeof $1 == 'number' ? '' : $1}<span class="${regArr[i].cls}">${$3}</span>${typeof $4 ==
-					'number'
-						? ''
-						: $4}`;
+					console.log(regArr[i].type, 'match:',m ,'__$1:', $1, '$2:', $2, '$3:', $3);
+					// canBeBreak = (regArr[i].cls == 'code-comment' || regArr[i].cls == 'code-string') && !!$3;
+					canBeBreak = (regArr[i].cls == 'code-comment') && !!$3;
+					return `${typeof $1 == 'string' ? $1 : ''}<span class="${regArr[i].cls}">${$3}</span>${typeof $4 ==
+					'string'
+						? $4
+						: ''}`;
 				})
 				.replace(/<</g, '&lt;<')
 				.replace(/>>/g, '>&gt;');
@@ -273,7 +307,7 @@ export default class Edior extends React.Component {
 					//处理ol
 					lineOne += '<li>' + mdArr[i++].replace(/^(\d\.)/, '<span class="list-prefix">$1</span>') + '</li>';
 				}
-				html += '<ol class="editor-list">' + lineOne + '</ol>';
+				html += '<ol class="editor-list">' + this.symbol2el(lineOne) + '</ol>';
 				i--;
 			} else if (mdArr[i].match(/^\s*-(?!--)/)) {
 				//ul
@@ -285,7 +319,7 @@ export default class Edior extends React.Component {
 					lineOne += '<li>' + item.replace(/^(\s*-)/, '<span class="list-prefix">&weierp;</span>') + '</li>';
 					i++;
 				}
-				html += '<ul class="editor-list">' + lineOne + '</ul>';
+				html += '<ul class="editor-list">' + this.symbol2el(lineOne) + '</ul>';
 				i--;
 			} else {
 				// 转< > &
@@ -701,7 +735,7 @@ export default class Edior extends React.Component {
 					await this.awaitFn();
 					let data = {};
 					data.title = values.title;
-					data.cover = this.state.imageUrl || 'https://static.topdiantop.top/images/blog_default_bg.jpg';
+					data.cover = this.state.cover || 'https://static.topdiantop.top/images/blog_default_bg.jpg';
 					data.listCardType = this.state.listCardType;
 					data.categories = values.categories;
 					data.summary = this.state.MD.slice(0, 200);
@@ -720,7 +754,7 @@ export default class Edior extends React.Component {
 		}
 		if (info.file.status === 'done') {
 			// Get this url from response in real world.
-			const key = type ? type : 'imageUrl'
+			const key = type ? type : 'cover'
 			this.setState({
 				[key]: info.file.response.data.url,
 				loading: false
@@ -773,8 +807,8 @@ export default class Edior extends React.Component {
 								showUploadList={false}
 								onRemove={this.imageRemove}
 							>
-								{this.state.imageUrl ? (
-									<img className="bgImage" src={this.state.imageUrl} />
+								{this.state.cover ? (
+									<img className="bgImage" src={this.state.cover} />
 								) : (
 									uploadButton
 								)}

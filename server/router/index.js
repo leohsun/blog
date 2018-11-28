@@ -222,7 +222,7 @@ router.get('/blog/article/detail/:id', async (ctx, next) => {
 		}
 	};
 });
-router.post('/blog/article/update/:id', koaBody(), checkPoster(), async (ctx, next) => {
+router.post('/blog/article/update/:id', auth(), koaBody(), checkPoster(), async (ctx, next) => {
 	const id = ctx.params.id;
 	const Article = mongoose.model('Article');
 	let body = ctx.request.body;
