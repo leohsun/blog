@@ -15,7 +15,7 @@ class Admin extends Component {
 
   render() {
     return (
-      <div style={{height:'100%'}}>
+      <div style={{height:'100%', overflow: 'hidden'}}>
         <Route path='/admin' exact render={()=> <Redirect to="/admin/login" />} />
         <Route path='/admin/login' component={Login} />
         <Provider adminStore={adminStore}>
