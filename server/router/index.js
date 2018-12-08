@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const koaBody = require('koa-body');
 const nanoid = require('nanoid');
 const router = new Router();
-const isProd = process.env.BABEL_ENV === 'production';
+const isProd = process.env.NODE_ENV === 'production';
 
 const imgTransfor = function async(body) { // todo filter tep image
 	return new Promise((res,rej) => {

@@ -75,9 +75,9 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
-    "server:dev": "BABEL_ENV=development nodemon server/index.js",
-    "server": "BABEL_ENV=production nodemon server/index.js",
-    "es": "BABEL_ENV=development node test/index.js"
+    "server:dev": "NODE_ENV=development nodemon server/index.js",
+    "server": "NODE_ENV=production nodemon server/index.js",
+    "es": "NODE_ENV=development node test/index.js"
   },
   "jest": {
     "collectCoverageFrom": [
