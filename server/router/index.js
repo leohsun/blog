@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const koaBody = require('koa-body');
 const nanoid = require('nanoid');
 const router = new Router();
+const isProd = process.env.BABEL_ENV === 'production';
 
 const imgTransfor = function async(body) { // todo filter tep image
 	return new Promise((res,rej) => {
@@ -53,12 +54,12 @@ const removeCatsIt = (remove_cats, art_id) => {
 				const old_arts = savedCat.articles;
 				let new_arts = [];
 				for (let i = 0; i < old_arts.length; i++) {
-					console.log(old_arts[i] + ' : ' + art_id, old_arts[i].toString() === art_id.toString());
+					// console.log(old_arts[i] + ' : ' + art_id, old_arts[i].toString() === art_id.toString());
 					if (old_arts[i].toString() !== art_id.toString()) {
 						new_arts.push(old_arts[i]);
 					}
 				}
-				console.log('new_arts:', new_arts);
+				// console.log('new_arts:', new_arts);
 				await Category.findByIdAndUpdate(savedCat._id, {articles: new_arts});
 			}
 			i++;
@@ -250,7 +251,7 @@ router.post('/blog/article/update/:id', auth(), koaBody(), checkPoster(), async 
 			}
 		}
 	}
-	console.log(add_cats, remove_cats);
+	// console.log(add_cats, remove_cats);
 	if (add_cats.length > 0) {
 		await saveCatsIt(add_cats, oldDoc._id);
 	}
@@ -385,13 +386,14 @@ router.post(
 		const {file} = ctx.request.body.files;
 		const ext = file.type.split('/')[1];
 		const fileName = `${nanoid()}.${ext}`;
+		const prePath = isProd ? '/home/www/static/images/blog/': '../../upload/'
 		try {
-			await fs.rename(file.path, join(`/home/www/static/images/blog/${fileName}`), () => {});
+			await fs.rename(file.path, join(__dirname,`${prePath}${fileName}`), () => {});
 			ctx.body = {
 				sucess: true,
 				code: 200,
 				data: {
-					url: `https://static.topdiantop.top/images/blog/${fileName}`
+					url: isProd ? `https://static.topdiantop.top/images/blog/${fileName}`: `http://10.165.1.155:5000/${fileName}`
 				},
 				msg: '上传文件成功'
 			};

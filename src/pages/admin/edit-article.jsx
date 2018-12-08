@@ -110,7 +110,6 @@ export default class Article extends React.Component {
     }
   }
   handleOk = (e) => {
-    console.log(e);
     this.setState({
       visible: false,
     });

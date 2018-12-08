@@ -12,7 +12,6 @@ export default class Home extends React.Component {
     limit: this.props.commonStore.scrollTop,
     isLoading: false,
     data: [],
-
   }
   elsLimits = []
   currentPage = 1
@@ -79,15 +78,16 @@ export default class Home extends React.Component {
       })
   }
   componentDidMount() {
-
     this.fetchList()
   }
   componentDidUpdate() {
+    
     this.getElsLimits()
   }
 
 
   render() {
+    console.log(this.props.commonStore.scrollTop)
     this.setAnimation(this.props.commonStore.scrollTop)
     return (
       <PageWrapper>

@@ -38,7 +38,6 @@
     "fs-extra": "3.0.1",
     "glob": "^7.1.2",
     "html-webpack-plugin": "2.29.0",
-    "jest": "20.0.4",
     "koa": "^2.0.0-alpha.8",
     "koa-body": "^2.5.0",
     "koa-router": "^7.4.0",
@@ -76,7 +75,8 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
-    "server": "BABEL_ENV=development nodemon server/index.js",
+    "server:dev": "BABEL_ENV=development nodemon server/index.js",
+    "server": "BABEL_ENV=production nodemon server/index.js",
     "es": "BABEL_ENV=development node test/index.js"
   },
   "jest": {
@@ -139,5 +139,10 @@
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "puppeteer": "^1.11.0",
+    "rize": "^0.8.0"
   }
 }

@@ -1,5 +1,4 @@
 import React from 'react'
-
 import 'stylus/blog/page-wrapper'
 
 import { observer, inject } from 'mobx-react'
@@ -7,10 +6,6 @@ import { observer, inject } from 'mobx-react'
 @observer
 export default class PageWrapper extends React.Component {
   elsLimits = []
-  state = {
-    isLoading: true,
-    isMore: true
-  }
   scrollFn(_this,e) {
     //context 为 null
     let { scrollTop } = e.target.scrollingElement
@@ -36,10 +31,13 @@ componentDidMount() {
   this.topArrow = this.refs['top-arrow']
   this.bottomArrow = this.refs['bottom-arrow']
   // this.getElsLimits()
-  document.addEventListener('scroll', this.proxFN)
+  document.addEventListener('scroll', this.proxFN,{passive: false})
 }
 componentWillUnmount(){
   document.removeEventListener('scroll', this.proxFN)
+}
+shouldComponentUpdate (nextProps, nextState) {
+  return nextProps.children!==this.props.children.length;
 }
 
 render() {

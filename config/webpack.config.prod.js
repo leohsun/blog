@@ -12,17 +12,6 @@ const paths = require('./paths');
 const getClientEnvironment = require('./env');
 const WebpackProgressOraPlugin = require('webpack-progress-ora-plugin');
 
-function getModuleName(module) {
-	var sign = 'node_modules';
-	var signIndex = module.resource.indexOf(sign);
-	var pathSeparator = module.resource.slice(signIndex - 1, signIndex);
-	var modulePath = module.resource.substring(signIndex + sign.length + 1);
-	var moduleName = modulePath.substring(0, modulePath.indexOf(pathSeparator));
-	moduleName = moduleName.toLowerCase();
-
-	return moduleName;
-}
-
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
 const publicPath = paths.servedPath;
