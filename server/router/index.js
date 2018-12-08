@@ -386,9 +386,9 @@ router.post(
 		const {file} = ctx.request.body.files;
 		const ext = file.type.split('/')[1];
 		const fileName = `${nanoid()}.${ext}`;
-		const prePath = isProd ? '/home/www/static/images/blog/': '../../upload/'
+		const prePath = isProd ? '/home/www/static/images/blog/': join(__dirname,'../../upload/')
 		try {
-			await fs.rename(file.path, join(__dirname,`${prePath}${fileName}`), () => {});
+			await fs.rename(file.path, `${prePath}${fileName}`, () => {});
 			ctx.body = {
 				sucess: true,
 				code: 200,
