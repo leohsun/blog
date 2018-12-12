@@ -34,6 +34,7 @@ export default class Home extends React.Component {
   }
   getElsLimits() { //设置动画 -> class 动画用Css3做
     const rowEls = this.refs['content-list'].children
+    console.log(rowEls.length)
     for (let i = 0; i < rowEls.length; i++) {
       let limit = this.getLimit(rowEls[i]) - document.documentElement.clientHeight
       this.elsLimits.push(limit)
@@ -60,6 +61,9 @@ export default class Home extends React.Component {
             data: this.state.data.concat(raw.data),
             hasMore: raw.hasMore,
             currentPage: raw.page
+          },() => {
+            // this.getElsLimits()
+            // this.setAnimation(this.props.commonStore.scrollTop)
           })
         }
       })
@@ -73,6 +77,9 @@ export default class Home extends React.Component {
             data: raw.data,
             hasMore: raw.hasMore,
             currentPage: raw.page
+          },() => {
+            // this.getElsLimits()
+            // this.setAnimation(this.props.commonStore.scrollTop)
           })
         }
       })
@@ -80,15 +87,9 @@ export default class Home extends React.Component {
   componentDidMount() {
     this.fetchList()
   }
-  componentDidUpdate() {
-    
-    this.getElsLimits()
-  }
-
 
   render() {
-    console.log(this.props.commonStore.scrollTop)
-    this.setAnimation(this.props.commonStore.scrollTop)
+    
     return (
       <PageWrapper>
         <div className="content-list" ref={"content-list"}>

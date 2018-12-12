@@ -49,7 +49,7 @@ export default class Editor extends React.Component {
 		previewVisible: false,
 		HTML: '',
 		// bgList:[],
-		MD: ``,
+		MD: `\`"__ob__"\`**加粗**\`"__ob__"\``,
 		card_title: '',
 		card_cover: '',
 		card_summary: '',
@@ -74,6 +74,18 @@ export default class Editor extends React.Component {
 	endIdx = 0;
 	selectedVal = '';
 	typeofTextFormattedByToolsbarWithUrl = '';
+	textAreaScrollTop = 0;
+	inlinecodeTags = [];
+	tagId = 0;
+	resetScroll() {
+		this.textAreaScrollTop = this.textArea.scrollTop;
+		setTimeout(() => {
+			// setState 异步 so ...
+			this.textArea.focus();
+			this.textArea.setSelectionRange(this.starIdx, this.endIdx);
+			this.textArea.scrollTop = this.textAreaScrollTop;
+		}, 0);
+	}
 	saveVal2State(key, _) {
 		this.setState({[key]: _.target.value});
 	}
@@ -103,8 +115,17 @@ export default class Editor extends React.Component {
 
 	//md2html
 	symbol2el(str) {
+		// reset guard variable
+		this.inlinecodeTags = [];
+		this.tagId = 0;
 		let rawStr = str.trim();
 		const regExp = [
+			{
+				title: '行内code',
+				reg: /`([^`]+)`/g,
+				preFix: '<span class="inline-code">',
+				nextFix: '</span>'
+			},
 			{
 				title: '分割线',
 				reg: /^---(\s)*$/,
@@ -121,12 +142,6 @@ export default class Editor extends React.Component {
 				title: '斜体',
 				reg: /\*(.+)\*/g,
 				preFix: '<span class="text-italic">',
-				nextFix: '</span>'
-			},
-			{
-				title: '行内code',
-				reg: /`([^`]+)`/g,
-				preFix: '<span class="inline-code">',
 				nextFix: '</span>'
 			},
 			{
@@ -185,6 +200,7 @@ export default class Editor extends React.Component {
 					'<div class="editor-card"><a href="$4"><div class="lfet-image-cover"><img src="$2" alt="$1"/></div><div class="right-content"> <h2>$1</h2><p>$3</p></div></div></a> '
 			}
 		];
+
 		for (let i = 0; i < regExp.length; i++) {
 			// console.log('rawStr:', rawStr);
 			rawStr = rawStr.replace(regExp[i].reg, (m, $1, $2, $3, $4, $5) => {
@@ -197,9 +213,16 @@ export default class Editor extends React.Component {
 				}
 				let key = $1 || '';
 				if (regExp[i].preFix === '<span class="inline-code">') {
-					key = '<code>' + key + '</code>';
+					// add a tag preper to replace it at the end;
 					key = this.code2el(key.replace(/\s/g, '&nbsp;'));
+					const idx = 'code:' + this.tagId++
+					this.inlinecodeTags.push({
+						'key': idx,
+						'el': regExp[i].preFix + key + regExp[i].nextFix
+					});
+					return idx;
 				}
+
 				if (regExp[i].preFix === '<h2 class="text-title">') {
 					// add a tag to title
 					return `<h2 class="text-title" id="${key}">` + key + regExp[i].nextFix;
@@ -210,10 +233,20 @@ export default class Editor extends React.Component {
 
 		return rawStr;
 	}
+
+
+	formatInlineCode(rawStr) {
+		let res = rawStr;
+		for (let i = 0; i < this.inlinecodeTags.length; i++) {
+			console.log(i,res)
+			res = res.replace(new RegExp(this.inlinecodeTags[i]['key']), this.inlinecodeTags[i]['el']);
+		}
+		return res;
+	}
 	code2el(str) {
+		console.log('code: ', str);
 		const regArr = [
 			//关键字满足 $1-$2-$3
-
 			{
 				type: '注释',
 				reg: /(<code>?(&nbsp;)*)(\/\/[^<]+)(?=<\/code>)/g,
@@ -221,7 +254,7 @@ export default class Editor extends React.Component {
 			},
 			{
 				type: '字符串',
-				reg: /((&nbsp;)*)(`[^`]*`|'[^']*'|"[^"]*")(?=\s*[^<>])/g,
+				reg: /((&nbsp;)*)(`[^`]*`|'[^']*'|"[^"]*")(?=\s*[^<>]*)/g,
 				cls: 'code-string'
 			},
 
@@ -232,7 +265,7 @@ export default class Editor extends React.Component {
 			},
 			{
 				type: '符号',
-				reg: /([^'"`\w](&nbsp;)?)(\+\+?|->|--?|=&gt;|=>|==?=?|!==?|\*|\/)(?=[^'"`%\w])/g,
+				reg: /([^'"`\w](&nbsp;)?)(\+\+?|->|--?|=&gt;|=>|==?=?|!==?|\*|\$|\/)(?=[^'"`%\w])/g,
 				cls: 'code-symbol'
 			},
 			{
@@ -265,7 +298,6 @@ export default class Editor extends React.Component {
 
 			if (canBeBreak) break;
 		}
-		// console.log('rawStr:' + rawStr);
 		return rawStr;
 	}
 	md2html = () => {
@@ -301,7 +333,7 @@ export default class Editor extends React.Component {
 					//处理ol
 					lineOne += '<li>' + mdArr[i++].replace(/^(\d\.)/, '<span class="list-prefix">$1</span>') + '</li>';
 				}
-				html += '<ol class="editor-list">' + this.symbol2el(lineOne) + '</ol>';
+				html += '<ol class="editor-list">' +  this.formatInlineCode(this.symbol2el(lineOne)) + '</ol>';
 				i--;
 			} else if (mdArr[i].match(/^\s*-(?!--)/)) {
 				//ul
@@ -313,7 +345,7 @@ export default class Editor extends React.Component {
 					lineOne += '<li>' + item.replace(/^(\s*-)/, '<span class="list-prefix">&weierp;</span>') + '</li>';
 					i++;
 				}
-				html += '<ul class="editor-list">' + this.symbol2el(lineOne) + '</ul>';
+				html += '<ul class="editor-list">' +  this.formatInlineCode(this.symbol2el(lineOne)) + '</ul>';
 				i--;
 			} else {
 				// 转< > &
@@ -321,7 +353,8 @@ export default class Editor extends React.Component {
 					if ($1 === '&') return '&amp;';
 					return '&lt' + $1 + '&gt';
 				});
-				html += "<div class='editor-row'>" + this.symbol2el(encodeStr) + '</div>';
+				//  deal inline-code
+				html += "<div class='editor-row'>" + this.formatInlineCode(this.symbol2el(encodeStr)) + '</div>';
 			}
 		}
 		this.setState({HTML: `<div class="editor-style clearfix">${html}</div>`});
@@ -389,11 +422,7 @@ export default class Editor extends React.Component {
 		}
 
 		this.setState({MD: resultStr});
-		setTimeout(() => {
-			// setState 异步 so ...
-			this.textArea.focus();
-			this.textArea.setSelectionRange(this.starIdx, this.endIdx);
-		}, 0);
+		this.resetScroll();
 	}
 
 	sortIdxByOlorUl(rawStr, type) {
@@ -527,13 +556,10 @@ export default class Editor extends React.Component {
 				this.endIdx = this.starIdx + focusText.length;
 			}
 		}
+
 		//选中文本
 		this.setState({MD: resultStr});
-		setTimeout(() => {
-			// setState 异步 so ...
-			this.textArea.focus();
-			this.textArea.setSelectionRange(this.starIdx, this.endIdx);
-		}, 0);
+		this.resetScroll();
 	}
 	textFormattedByToolsbarNewline(type) {
 		//换行
@@ -627,11 +653,7 @@ export default class Editor extends React.Component {
 
 		//选中文本
 		this.setState({MD: resultStr});
-		setTimeout(() => {
-			// setState 异步 so ...
-			this.textArea.focus();
-			this.textArea.setSelectionRange(this.starIdx, this.endIdx);
-		}, 0);
+		this.resetScroll();
 	}
 	showToolBarModal(type) {
 		this.setState({
@@ -639,7 +661,6 @@ export default class Editor extends React.Component {
 			toolBarModalTitle: this.selectedVal,
 			toolBarModalLink: ''
 		});
-		console.log(this.refs);
 		this.typeofTextFormattedByToolsbarWithUrl = type;
 	}
 	strSlice() {

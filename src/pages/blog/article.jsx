@@ -73,7 +73,7 @@ export default class Article extends React.Component {
 
         <div className="content-wrapper" >
           <h2 className="main-title">{this.state.detail.title}</h2>
-          <img height="300" src={this.state.detail.cover} alt="head image"/>
+          {/* <img height="300" src={this.state.detail.cover} alt="head image"/> */}
           <div className="html-Container" dangerouslySetInnerHTML={{ __html: this.state.detail.HTML }}></div>
           <div className="article-footer">
             <div className="tag">
