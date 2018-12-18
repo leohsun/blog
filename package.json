@@ -9,7 +9,6 @@
     "babel-cli": "^6.26.0",
     "babel-core": "6.26.0",
     "babel-eslint": "7.2.3",
-    "babel-jest": "20.0.3",
     "babel-loader": "7.1.2",
     "babel-plugin-import": "^1.7.0",
     "babel-plugin-transform-decorators": "^6.24.1",
@@ -74,6 +73,7 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
+    "test": "node node node_modules/jasmine/bin/jasmine",
     "server:dev": "NODE_ENV=development nodemon server/index.js",
     "server": "NODE_ENV=production nodemon server/index.js",
     "es": "NODE_ENV=development node test/index.js"
@@ -140,6 +140,7 @@
     "extends": "react-app"
   },
   "devDependencies": {
+    "jasmine": "^3.3.1",
     "mocha": "^5.2.0",
     "puppeteer": "^1.11.0",
     "rize": "^0.8.0"
