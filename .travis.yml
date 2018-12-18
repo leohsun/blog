@@ -4,12 +4,12 @@ node_js:
   - "node"
 
 
-install:
- - npm install
+# install:
+#  - npm install
 
-script: 
-- CI=false npm run build
+# script: 
+# - CI=false npm run build
 
 after_script:
-- scp -o StrictHostKeyChecking=no ./build/* www.topdiantop.top:/home/travis-test
+- scp -o StrictHostKeyChecking=no ./public/* root@www.topdiantop.top:/home/travis-test
 
