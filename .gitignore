@@ -58,7 +58,7 @@ typings/
 .env
 
 ecosystem.configuration.js
-.Ds_Store
+.DS_Store
 build
 upload
 

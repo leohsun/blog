@@ -1,1 +1,13 @@
 language: node_js
+
+node_js:
+  - "node"
+
+
+install:
+ - npm install
+
+scripts: 
+- npm run build
+- scp ./build/* www.topdiantop.top:/home/travis-test
+
