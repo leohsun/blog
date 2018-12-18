@@ -10,6 +10,6 @@ install:
 script: 
 - CI=false npm run build
 
-afterscript:
+after_script:
 - scp -o StrictHostKeyChecking=no ./build/* www.topdiantop.top:/home/travis-test
 
