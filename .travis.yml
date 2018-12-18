@@ -8,7 +8,7 @@ install:
  - npm install
 
 script: 
-- npm run build
+- CI=false npm run build
 
 afterscript:
 - scp -o StrictHostKeyChecking=no ./build/* www.topdiantop.top:/home/travis-test
