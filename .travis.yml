@@ -9,5 +9,7 @@ install:
 
 script: 
 - npm run build
-- scp ./build/* www.topdiantop.top:/home/travis-test
+
+afterscript:
+- scp -o StrictHostKeyChecking=no ./build/* www.topdiantop.top:/home/travis-test
 
