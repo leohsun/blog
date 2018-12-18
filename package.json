@@ -73,7 +73,7 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node node node_modules/jasmine/bin/jasmine",
+    "test": "node node_modules/jasmine/bin/jasmine",
     "server:dev": "NODE_ENV=development nodemon server/index.js",
     "server": "NODE_ENV=production nodemon server/index.js",
     "es": "NODE_ENV=development node test/index.js"
