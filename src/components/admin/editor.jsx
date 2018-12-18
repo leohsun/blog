@@ -1,11 +1,13 @@
 import React from 'react';
 import 'stylus/admin/editor';
 import {baseURL} from '../../util';
+import {inject} from 'mobx-react';
 import {Input, Modal, Select, Form, Button, Radio, Popover, Upload, Icon} from 'antd';
 const RadioGroup = Radio.Group;
 const Option = Select.Option;
 const FormItem = Form.Item;
 const PropTypes = require('prop-types');
+@inject('adminStore')
 @Form.create()
 export default class Editor extends React.Component {
 	static propTypes = {
@@ -49,7 +51,9 @@ export default class Editor extends React.Component {
 		previewVisible: false,
 		HTML: '',
 		// bgList:[],
-		MD: `\`"__ob__"\`**加粗**\`"__ob__"\``,
+		MD: `\`\`\`
+		get () {}
+		\`\`\``,
 		card_title: '',
 		card_cover: '',
 		card_summary: '',
@@ -76,6 +80,8 @@ export default class Editor extends React.Component {
 	typeofTextFormattedByToolsbarWithUrl = '';
 	textAreaScrollTop = 0;
 	inlinecodeTags = [];
+	inlineStrTags = [];
+	inlineCommentTags = [];
 	tagId = 0;
 	resetScroll() {
 		this.textAreaScrollTop = this.textArea.scrollTop;
@@ -106,7 +112,6 @@ export default class Editor extends React.Component {
 		});
 	};
 	listCardTypeonChange = (e) => {
-		console.log('radio checked', e.target.value);
 		this.setState({
 			listCardType: e.target.value
 		});
@@ -115,13 +120,10 @@ export default class Editor extends React.Component {
 
 	//md2html
 	symbol2el(str) {
-		// reset guard variable
-		this.inlinecodeTags = [];
-		this.tagId = 0;
 		let rawStr = str.trim();
 		const regExp = [
 			{
-				title: '行内code',
+				title: 'inline-code',
 				reg: /`([^`]+)`/g,
 				preFix: '<span class="inline-code">',
 				nextFix: '</span>'
@@ -215,10 +217,10 @@ export default class Editor extends React.Component {
 				if (regExp[i].preFix === '<span class="inline-code">') {
 					// add a tag preper to replace it at the end;
 					key = this.code2el(key.replace(/\s/g, '&nbsp;'));
-					const idx = 'code:' + this.tagId++
+					const idx = 'code_' + this.tagId++;
 					this.inlinecodeTags.push({
-						'key': idx,
-						'el': regExp[i].preFix + key + regExp[i].nextFix
+						key: idx,
+						el: regExp[i].preFix + key + regExp[i].nextFix
 					});
 					return idx;
 				}
@@ -231,29 +233,60 @@ export default class Editor extends React.Component {
 			});
 		}
 
-		return rawStr;
+		return this.formatInlineCode(rawStr);
 	}
-
 
 	formatInlineCode(rawStr) {
+		// console.log(this.inlinecodeTags)
 		let res = rawStr;
 		for (let i = 0; i < this.inlinecodeTags.length; i++) {
-			console.log(i,res)
+			// console.log(i, res, this.inlinecodeTags[i]);
 			res = res.replace(new RegExp(this.inlinecodeTags[i]['key']), this.inlinecodeTags[i]['el']);
 		}
+		// reset guard variable
+		this.inlinecodeTags = [];
+		// this.tagId = 0;
 		return res;
 	}
+
+	formatInlineStrOrComment(rawStr,type='string') {
+		let tagArr = [];
+		if (type === 'string') {
+			tagArr = this.inlineStrTags;
+		} else if (type === 'comment') {
+			tagArr = this.inlineCommentTags;
+		} else return;
+		console.log(rawStr,tagArr)
+		let res = rawStr;
+		for (let i = 0; i < tagArr.length; i++) {
+			// console.log(i, res, tagArr[i]);
+			res = res.replace(new RegExp(tagArr[i]['key']), tagArr[i]['el']);
+		}
+		// reset guard variable
+		if (type === 'string') {
+				this.inlineStrTags = [];
+			} else this.inlineCommentTags = [];
+			this.tagId = 0;
+		if(type === 'comment') return res;
+		return this.formatInlineStrOrComment(res,'comment');
+	}
+
 	code2el(str) {
-		console.log('code: ', str);
+		// console.log(str)
 		const regArr = [
 			//关键字满足 $1-$2-$3
 			{
-				type: '注释',
-				reg: /(<code>?(&nbsp;)*)(\/\/[^<]+)(?=<\/code>)/g,
+				type: 'wholeline-comment',
+				reg: /(^<code>(&nbsp;)*)(\/\/.+)(.*)/g,
 				cls: 'code-comment'
 			},
 			{
-				type: '字符串',
+				type: 'inline-comment',
+				reg: /(([^\/])+)(\/\/.+)(.*)/g,
+				cls: 'code-comment'
+			},
+			{
+				type: 'string',
 				reg: /((&nbsp;)*)(`[^`]*`|'[^']*'|"[^"]*")(?=\s*[^<>]*)/g,
 				cls: 'code-string'
 			},
@@ -265,17 +298,17 @@ export default class Editor extends React.Component {
 			},
 			{
 				type: '符号',
-				reg: /([^'"`\w](&nbsp;)?)(\+\+?|->|--?|=&gt;|=>|==?=?|!==?|\*|\$|\/)(?=[^'"`%\w])/g,
+				reg: /([^'"`\w<]|(&nbsp;))(<|\|\||&&|:|\?|\+\+?|->|--?|=&gt;|=>|==?=?|!=?=?|\.\.\.|\*|\$|\/|\.)(?!span|\/)/g,
 				cls: 'code-symbol'
 			},
 			{
 				type: '关键字',
-				reg: /((&nbsp;)|[^\w])(return|document|window|true|false|null|export|import|break|case|catch|continue|default|delete|do|else|finally|for|function|if|instanceof|in|new|return|switch|this|throw|try|typeof|var|let|const|void|while|with|from)(?=\.|&nbsp;|;)/g,
+				reg: /((&nbsp;)|>|\(|\{|<code>)(console|Date|Arrary|Object|class|return|document|window|true|false|null|export|import|break|case|catch|continue|default|delete|do|else|finally|for|function|if|instanceof|in|new|return|switch|this|throw|try|typeof|var|let|const|void|while|with|from)(?=\.|&nbsp;|;)/g,
 				cls: 'code-keyword'
 			},
 			{
 				type: '变量',
-				reg: /(<code>(&nbsp;)*)([a-zA-Z_-]+\w*)(?=(&nbsp;)?=?[^\s=>]*;?\(?<)/g,
+				reg: /((&nbsp;)|\.)([a-zA-Z_-]+\w*)(?=(&nbsp;)|=|;|\(|<)/g,
 				cls: 'code-varialbe'
 			}
 		];
@@ -285,22 +318,40 @@ export default class Editor extends React.Component {
 			let canBeBreak = false;
 			rawStr = rawStr
 				.replace(regArr[i].reg, (m, $1, $2, $3, $4) => {
-					// console.log(regArr[i].type, 'match:',m ,'__$1:', $1, '$2:', $2, '$3:', $3, '$4:', $4);
+					// console.log(regArr[i].type, 'match:',m ,'$1:', $1, '$2:', $2, '$3:', $3, '$4:', $4);
 					// canBeBreak = (regArr[i].cls == 'code-comment' || regArr[i].cls == 'code-string') && !!$3;
-					canBeBreak = regArr[i].cls == 'code-comment' && !!$3;
-					return `${typeof $1 == 'string' ? $1 : ''}<span class="${regArr[i].cls}">${$3}</span>${typeof $4 ==
-					'string'
-						? $4
-						: ''}`;
+					canBeBreak = regArr[i].type == 'wholeline-comment' && !!$3;
+					if(regArr[i].type == 'inline-comment') {
+						const key = 'inline-comment_' + this.tagId++;
+						this.inlineCommentTags.push({
+							key,
+							el: `<span class="${regArr[i].cls}">${$3}</span>`
+						});
+						return typeof $1 == 'string' ? $1 + key : key;
+					}
+
+					if(regArr[i].type == 'string') {
+						const key = 'string_' + this.tagId++;
+						this.inlineStrTags.push({
+							key,
+							el: `<span class="${regArr[i].cls}">${$3}</span>`
+						});
+						return typeof $1 == 'string' ? $1 + key : key;
+					}
+					return `${typeof $1 == 'string' ? $1 : ''}<span class="${regArr[i].cls}">${$3}</span>`;
 				})
 				.replace(/<</g, '&lt;<')
 				.replace(/>>/g, '>&gt;');
 
 			if (canBeBreak) break;
 		}
-		return rawStr;
+		// console.log('rawStr :', rawStr)
+		return this.formatInlineStrOrComment(rawStr);
+		// console.log(rawStr)
+		// return rawStr;
 	}
 	md2html = () => {
+		this.props.adminStore.setLoading(true);
 		let html = '';
 		const rawStr = this.state.MD;
 		//先处理 多行code 及 card
@@ -333,7 +384,7 @@ export default class Editor extends React.Component {
 					//处理ol
 					lineOne += '<li>' + mdArr[i++].replace(/^(\d\.)/, '<span class="list-prefix">$1</span>') + '</li>';
 				}
-				html += '<ol class="editor-list">' +  this.formatInlineCode(this.symbol2el(lineOne)) + '</ol>';
+				html += '<ol class="editor-list">' + this.symbol2el(lineOne) + '</ol>';
 				i--;
 			} else if (mdArr[i].match(/^\s*-(?!--)/)) {
 				//ul
@@ -345,7 +396,7 @@ export default class Editor extends React.Component {
 					lineOne += '<li>' + item.replace(/^(\s*-)/, '<span class="list-prefix">&weierp;</span>') + '</li>';
 					i++;
 				}
-				html += '<ul class="editor-list">' +  this.formatInlineCode(this.symbol2el(lineOne)) + '</ul>';
+				html += '<ul class="editor-list">' + this.symbol2el(lineOne) + '</ul>';
 				i--;
 			} else {
 				// 转< > &
@@ -354,10 +405,13 @@ export default class Editor extends React.Component {
 					return '&lt' + $1 + '&gt';
 				});
 				//  deal inline-code
-				html += "<div class='editor-row'>" + this.formatInlineCode(this.symbol2el(encodeStr)) + '</div>';
+				html += "<div class='editor-row'>" + this.symbol2el(encodeStr) + '</div>';
 			}
 		}
-		this.setState({HTML: `<div class="editor-style clearfix">${html}</div>`});
+		this.setState({HTML: `<div class="editor-style clearfix">${html}</div>`},() => {
+			this.props.adminStore.setLoading(false);
+		});
+		
 	};
 	handleInputChange = (e) => {
 		let MD = e.target.value;
@@ -486,7 +540,7 @@ export default class Editor extends React.Component {
 		if (inline) {
 			//e.g:文本`code`文本
 			if (symbol === '`') {
-				//行内code不换行
+				//inline-code不换行
 				if (sCharacter === symbol && eCharacter === symbol) {
 					//code 存在symbol
 					console.log('del: ' + symbol);
