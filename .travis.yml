@@ -8,8 +8,8 @@ node_js:
 after_script:
 - 
 after_success:
-- cd ~/.ssh
-- ls -a
+# - cd ~/.ssh
+# - ls -a
 - ssh-keyscan www.topdiantop.top >> $HOME/.ssh/known_hosts
 - export SSHPASS=$DEPLOY_PASS
 - ls
