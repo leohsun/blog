@@ -10,6 +10,7 @@ after_script:
 after_success:
 - cd ~/.ssh
 - ls -a
+- ssh-keyscan www.topdiantop.top >> $HOME/.ssh/known_hosts
 # - sshpass -e DEPLOY_PASSWORD scp -o StrictHostKeyChecking=no ./public/* DEPLOY_USER@www.topdiantop.top:/home/travis-test 
 - ssh -y root@www.topdiantop.top 'cd /home/www ; ls'
 
