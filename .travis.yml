@@ -12,7 +12,7 @@ after_success:
 - ls -a
 - ssh-keyscan www.topdiantop.top >> $HOME/.ssh/known_hosts
 - cat $HOME/.ssh/known_hosts
-- sshpass -p $DEPLOY_PASSWORD ssh $DEPLOY_PASSWORD@www.topdiantop.top 'cd /home ; ls'
+- sshpass -p $DEPLOY_PASSWORD ssh $DEPLOY_USER@www.topdiantop.top 'cd /home ; ls'
 env:
   global:
   - secure: 2p7jliKqClwy8ypnMGtILmdhTWHPoiGs/O1d/FBhmhLENNC7PoDURpHGpjG/akeQlGCLFPJ4uM/n0WZGverF87jZ2QTe+/eIJxMUwHVDncr9FCnA2HnVvqna8dW5h0IEeCcqOqLdnWNwWTKqWGoFlSFkHt/5JbGhd8pIPJmc5aBvtYzrtKQO8zGHdAkFwxo5G+wyxdjMKW+n0v/TzkReCAz6jC3jSeV8vfttUJAO+2BMPrsJ+hgk0ppaQlTN8BekF2FxSYLsOP5QTqBKHl1p5Hm2V1elw+KNj2fPiKGGtSycSC/PbLACLW/TAMxlSck+OCfpmNi/qTonRcvZ+9jKAj46d/YszMJKsDm3ny+oRbyC7wnpiPz7ZoRyuHFwQILzZ5QZs+iZtl8RTJGHAl3Yj+zRhwr7kL89+cX+9awHibJMlvIP43e+YiaXvNt3lLiz2VkO7zg7D4dGtjPvBK/uExkY5QJ08wuG4tiQooLThJW+42O8jclotN6TnxlZYBFkJrXndOdv5rFWtmG1wukIQczmkzvU2EnkkAsfxodw1AHadCYi1NapXrURAWDW25gnX/zsirrh799ED/ANhmZ6EeTYl73ecMDv5LsS+7Z6Q1n23TrkDdLQ74glfEm8qsbvWa7CczXzfml1Z7sZGSiJeAFIB853UwKy9gxWIsCS73w=
