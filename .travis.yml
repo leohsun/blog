@@ -10,7 +10,7 @@ after_script:
 after_success:
 # - sshpass -e DEPLOY_PASSWORD scp -o StrictHostKeyChecking=no ./public/* DEPLOY_USER@www.topdiantop.top:/home/travis-test 
 - sshpass -p lx8812345 root@www.topdiantop.top 'cd /home/www ; ls'
-- cd ~/
+- cd ~/.ssh
 - ls -a
 env:
   global:
