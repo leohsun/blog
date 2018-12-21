@@ -1,4 +1,7 @@
 language: node_js
+addons:
+  ssh_known_hosts:
+  - topdiantop.top:22
 node_js:
 - node
 before_install:
