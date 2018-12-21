@@ -1,22 +1,12 @@
 language: node_js
-addons:
-  apt:
-    packages:
-    - sshpass
-  ssh_known_hosts:
-  - topdiantop.top
-  - 120.78.144.145
 node_js:
 - node
-after_script:
-- 
-after_success:
-# - cd ~/.ssh
-# - ls -a
-- export SSHPASS=$DEPLOY_PASS
-- ls
-- sshpass -e sudo scp -o stricthostkeychecking=no shell.js $DEPLOY_USER@www.topdiantop.top:/home/travis-test
-env:
-  global:
-  - secure: 2p7jliKqClwy8ypnMGtILmdhTWHPoiGs/O1d/FBhmhLENNC7PoDURpHGpjG/akeQlGCLFPJ4uM/n0WZGverF87jZ2QTe+/eIJxMUwHVDncr9FCnA2HnVvqna8dW5h0IEeCcqOqLdnWNwWTKqWGoFlSFkHt/5JbGhd8pIPJmc5aBvtYzrtKQO8zGHdAkFwxo5G+wyxdjMKW+n0v/TzkReCAz6jC3jSeV8vfttUJAO+2BMPrsJ+hgk0ppaQlTN8BekF2FxSYLsOP5QTqBKHl1p5Hm2V1elw+KNj2fPiKGGtSycSC/PbLACLW/TAMxlSck+OCfpmNi/qTonRcvZ+9jKAj46d/YszMJKsDm3ny+oRbyC7wnpiPz7ZoRyuHFwQILzZ5QZs+iZtl8RTJGHAl3Yj+zRhwr7kL89+cX+9awHibJMlvIP43e+YiaXvNt3lLiz2VkO7zg7D4dGtjPvBK/uExkY5QJ08wuG4tiQooLThJW+42O8jclotN6TnxlZYBFkJrXndOdv5rFWtmG1wukIQczmkzvU2EnkkAsfxodw1AHadCYi1NapXrURAWDW25gnX/zsirrh799ED/ANhmZ6EeTYl73ecMDv5LsS+7Z6Q1n23TrkDdLQ74glfEm8qsbvWa7CczXzfml1Z7sZGSiJeAFIB853UwKy9gxWIsCS73w=
-  - secure: Db/N6lJE19SEv1UEzakxXldlDM0kKyuoBomBm1+uQEloyj8ywDLjK8fK/UY5Ydlexo9JX+Qg3+3StvK+aaTV2a5K5f7EpHFWAp/wa6v/IvIz1li9FOEt3jh64krNwCZfLzNNbGPkD0txg/0kIOxz4eAHiv+YpUFXIrjdUF2RXQB/gpnhZyZ3kHaJCAgJK73apvZWATSCMmjcCv0UzArJllNi6LdM0nVQjd+wb/nt0s1DWBOWkL/O1WI2Gua8oq3TdjqXQu29t46puG+RMpdagzSRieHQvg0D4TSfKz5IcxSodrEq/oqdAEPa3TdIwgYzN7mDeZEhqcaf2sOhWvMVk06aF+AfejgNmTKn1hqtnwQInvXtsLHBD4U/IvECB7UJV+utrayReC1JKLWHZ/guotHSsZJ/wKYG3VQ99TUGVGw5BDC4CKOj0HB7hIlQoXCGstN5TfWrf1ojiBivtAlPHu58LyYKH/Wq5F9wj1MH0NscVNghIuQjEYS17SIpwlgI4imHgBFfi8a4QCXsAOtaC9tRJvTK5gGEqc2yzb0UwZIsFFRUNSRIQIOg0odU+SwKSzuYdduezK8wApIh6/rer8VmqZGCXqJJyAzj0V/0Ziu90h3u3A48mpAaSPDF88zjcb0Vckq3PuxfbrunBbrj5EumN4bx3ZWhmvJkDqeCQzI=
+before_install:
+- openssl aes-256-cbc -K $encrypted_de20df944f06_key -iv $encrypted_de20df944f06_iv
+  -in .travis/id_rsa.enc -out .travis/id_rsa -d
+deploy:
+- provider: script
+  skip_cleanup: true
+  script: ".travis/deploy.sh"
+  on:
+    branch: master
