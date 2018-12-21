@@ -1,7 +1,7 @@
 language: node_js
 addons:
   ssh_known_hosts:
-  - topdiantop.top:22
+  - topdiantop.top
 node_js:
 - node
 before_install:
@@ -12,6 +12,6 @@ before_install:
 - chmod 600 ~/.ssh/id_rsa
 - ssh-add ~/.ssh/id_rsa
 script:
-- ssh root@www.topdiantop.top
+- ssh -o stricthostkeychecking=no root@www.topdiantop.top
 - cd /home/
 - ls
