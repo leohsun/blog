@@ -63,3 +63,4 @@ build
 upload
 
 package-lock.json
+*.bak
