@@ -13,4 +13,5 @@ before_install:
 script:
 - CI=false npm run build
 after_success:
-- scp -o stricthostkeychecking=no ./build/* root@www.topdiantop.top:/home/travis-test
+-ssh -o stricthostkeychecking=no root@www.topdiantop.top "rm -fr /home/travis-test/*"
+- scp -r -o stricthostkeychecking=no ./build/* root@www.topdiantop.top:/home/travis-test
